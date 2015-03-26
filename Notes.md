@@ -19,18 +19,15 @@ Rain Details
 			HA: hail
 			HR: heavy rain, etc.
 
-KDP:	Specific Differential Phase
+- KDP:	Specific Differential Phase
 
-			Good explanation at http://www.erh.noaa.gov/rah/downloads/Dual_Pol/KDP_v1.pdf
-			The dual polarity has two radar being sent from the observation place to the storm cloud. One radar is horizontal, one is vertical. When they go through a certain medium, like rain or hail, they get slow. They slow differently, though, so there is a difference in where they end up. KDP is the horizontal pulse minus the vertical pulse.
+			- Good explanation at http://www.erh.noaa.gov/rah/downloads/Dual_Pol/KDP_v1.pdf
+			- The dual polarity has two radar being sent from the observation place to the storm cloud. One radar is horizontal, one is vertical. When they go through a certain medium, like rain or hail, they get slow. They slow differently, though, so there is a difference in where they end up. KDP is the horizontal pulse minus the vertical pulse.
+			- KDP will be positive if the medium droplets are oval elongated horizontally and negative if the medium droplets are oval elongated vertically and near 0 if perfectly round.
+			- The more dense the medium (heavy rain), the more shift. In other words, as KDP increases absolutely, so should the expected rain amount.
+			- ranges from -2 to 7
 
-			KDP will be positive if the medium droplets are oval elongated horizontally and negative if the medium droplets are oval elongated vertically and near 0 if perfectly round.
-
-			The more dense the medium (heavy rain), the more shift. In other words, as KDP increases absolutely, so should the expected rain amount.
-
-			ranges from -2 to 7
-
-dbZ:	Decibals relative to Z
+- dbZ:	Decibals relative to Z
 
 			5: Hardly noticeable
 			10: Light mist
@@ -39,23 +36,23 @@ dbZ:	Decibals relative to Z
 			...
 			65: Extreme/large hail
 
-QC:		Quality-controlled (reflectivity)
+- QC:		Quality-controlled (reflectivity)
 
-RhoHV: 	Rho (correlation coefficient), H (horizontal), V (vertical)
+- RhoHV: 	Rho (correlation coefficient), H (horizontal), V (vertical)
 
-ZDR:	Differential Reflectivity
+- ZDR:	Differential Reflectivity
 
-			Good explanation at http://www.erh.noaa.gov/rah/downloads/Dual_Pol/ZDR_v1.pdf
-			Measurement in decibals of the log of the ratio of horiz power to vertical power
-			Ranges -7.9 to 7.9
+			- Good explanation at http://www.erh.noaa.gov/rah/downloads/Dual_Pol/ZDR_v1.pdf
+			- Measurement in decibals of the log of the ratio of horiz power to vertical power
+			- Ranges -7.9 to 7.9
 
-NEXRAD
+- NEXRAD
 
-	Polarimetric radar data
-	US National Weather Service's weather radar network
-	Err by biological echoes (birds, bats, etc.), and drops may evaporate or blow off by the time they reach the ground
+	- Polarimetric radar data
+	- US National Weather Service's weather radar network
+	- Err by biological echoes (birds, bats, etc.), and drops may evaporate or blow off by the time they reach the ground
 
-MADIS
+- MADIS
 
-	Rain gauge data
-	Err by siting, wind, or splashing
+	- Rain gauge data
+	- Err by siting, wind, or splashing
