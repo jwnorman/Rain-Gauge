@@ -1,20 +1,20 @@
 Rain Details
 ------------
 
-QPEs: 	Quantitative Precipitation Estimates
+- QPEs: 	Quantitative Precipitation Estimates
 
-CRPS: 	Continuous Ranked Probability Score
+- CRPS: 	Continuous Ranked Probability Score
 
-		H(x):		Heaviside step function
+		- H(x):		Heaviside step function
 
 						=0 if x < 0
 
 						=1 if x >= 0
 					It is the cumulative distribution function of a random variable which is almost surely 0.
-		z:			The actual recorded gauge value (in mm)
-		N:			Testing dataset size
+		- z:			The actual recorded gauge value (in mm)
+		- N:			Testing dataset size
 
-HCA:	Hydrometeor Classifaction Algorithm
+- HCA:	Hydrometeor Classifaction Algorithm
 
 			HA: hail
 			HR: heavy rain, etc.
