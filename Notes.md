@@ -3,15 +3,24 @@ Rain Details
 
 QPEs: 	Quantitative Precipitation Estimates
 CRPS: 	Continuous Ranked Probability Score
+
 		H(x):		Heaviside step function
+
 						=0 if x < 0
+
 						=1 if x >= 0
+
 					It is the cumulative distribution function of a random variable which is almost surely 0.
 		z:			The actual recorded gauge value (in mm)
+
 		N:			Testing dataset size
+
 HCA:	Hydrometeor Classifaction Algorithm
+
 			HA: hail
+
 			HR: heavy rain, etc.
+			
 KDP:	Specific Differential Phase
 			Good explanation at http://www.erh.noaa.gov/rah/downloads/Dual_Pol/KDP_v1.pdf
 			The dual polarity has two radar being sent from the observation place to the storm cloud. One radar is horizontal, one is vertical. When they go through a certain medium, like rain or hail, they get slow. They slow differently, though, so there is a difference in where they end up. KDP is the horizontal pulse minus the vertical pulse.
