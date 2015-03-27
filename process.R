@@ -27,6 +27,9 @@ te <- as.data.frame(te)
 # load existing data
 load(file=paste(directory, "trUnlisted.Rda", sep=''))
 load(file=paste(directory, "teUnlisted.Rda", sep=''))
+load(file=paste(directory, "trMissing.Rda", sep=''))
+load(file=paste(directory, "teMissing.Rda", sep=''))
+
 
 # # Create jumbo training and testing dataset, tr.Unlisted and te.Unlisted
 # # tr and te have multiple observations per column for only one response
