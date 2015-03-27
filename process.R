@@ -3,7 +3,7 @@ library(data.table)
 trainExpected <- fread("train_2013.csv", select="Expected")
 
 # directory prefix
-directory <- "~/Documents/Kaggle/Rain/Rain-Gauge/Data/"
+directory <- "~/Documents/Kaggle/Rain/Rain-Gauge/"
 # load data
 tr <- fread(paste(directory, "train_2013.csv", sep=''), header = TRUE,
 			   colClasses = c("integer", "character", "character", "character", 
@@ -55,7 +55,7 @@ for (i in 2:19) {
 }
 
 te.Unlisted <- data.frame(id_te, matrix(0, nrow=length(id_te), ncol=length(unlistedColNames_te)))
-for (i in 2:18) {
+for (i in 2:19) {
 	te.Unlisted[,i] <- unlist(strsplit(te[,i], split=' '))
 }
 
