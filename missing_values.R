@@ -29,6 +29,15 @@ variablesWithMissing <- apply(tr.Unlisted, MARGIN=2, function(x) {
 	any(x %in% c("-99900.0", "-99901.0", "-99903.0", "nan", "999.0"))
 })
 variablesWithMissing <- names(variablesWithMissing[variablesWithMissing])
+
+# make sure there aren't any differences with the testing dataset
+# only difference: no missing in te.Unlisted$Reflectivity; nothing to worry about
+variablesWithMissing.te <- apply(te.Unlisted, MARGIN=2, function(x) {
+	any(x %in% c("-99900.0", "-99901.0", "-99903.0", "nan", "999.0"))
+})
+variablesWithMissing.te <- names(variablesWithMissing.te[variablesWithMissing.te])
+setdiff(variablesWithMissing, variablesWithMissing.te)
+
 variablesWithMissing.names <- paste(variablesWithMissing, "_NA", sep='')
 
 # Function to produce new variables of the same length
@@ -75,7 +84,23 @@ for (i in 1:ncol(te.Missing)) {
 save(tr.Missing, file=paste(directory, "trMissing.Rda", sep=''))
 save(te.Missing, file=paste(directory, "teMissing.Rda", sep=''))
 
+# Replace the values of -99900.0, -99901.0, etc. with NA since the other values are already accounted for in *.Missing
+# Also, I'll need to be able to use arithmetic with the columns and I can't have these -99900's throwing it off.
+
 replaceWithActualNA <- function(variable) {
 	varWithNA <- ifelse(variable %in% c("-99900.0", "-99901.0", "-99903.0", "nan", "999.0"), NA, variable)
 	return(varWithNA)
 }
+
+for (i in 1:length(variablesWithMissing)) {
+	tr.Unlisted[,variablesWithMissing[i]] <- replaceWithActualNA(tr.Unlisted[,variablesWithMissing[i]])
+}
+
+for (i in 1:length(variablesWithMissing)) {
+	te.Unlisted[,variablesWithMissing[i]] <- replaceWithActualNA(te.Unlisted[,variablesWithMissing[i]])
+}
+
+save(tr.Unlisted, file=paste(directory, "trUnlisted.Rda", sep=''))
+save(te.Unlisted, file=paste(directory, "teUnlisted.Rda", sep=''))
+
+
