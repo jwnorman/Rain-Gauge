@@ -111,4 +111,5 @@ te.Unlisted$MassWeightedSD <- as.numeric(te.Unlisted$MassWeightedSD)
 
 # According to competition director, there was a typo in Kdp so that Kdp is always 0
 # To calculate Kdp, use the following formula
-abs(Kdp) = exp(log(abs(RR3)/40.6)/0.866)*(abs(RR3)/RR3)
+tr.Unlisted$Kdp <- exp(log(abs(tr.Unlisted$RR3)/40.6)/0.866)*sign(tr.Unlisted$RR3)
+te.Unlisted$Kdp <- exp(log(abs(te.Unlisted$RR3)/40.6)/0.866)*sign(te.Unlisted$RR3)
