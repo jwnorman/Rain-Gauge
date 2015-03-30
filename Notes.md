@@ -56,3 +56,15 @@ Rain Details
 
 	- Rain gauge data
 	- Err by siting, wind, or splashing
+
+Variable Notes
+==============
+
+- TimeToEnd
+	- no missing values
+	- "time to the end of the hour" is pretty much uniformly random between 0 and 60 = .012 to .016. The exceptions are 0 (.0018) and 61 (.003762)
+	- as TimeToEnd goes up (approaches 60), the percentage of non-0 Expected (i.e., there is some rain) goes up.
+		- 0:2mm and 61mm are the exceptions.
+		- goes up from about .245 to .268 so for small but noticeable difference
+		- nonlinear increase
+	- near 0 correlation with all other integer/numeric explanatory variables
