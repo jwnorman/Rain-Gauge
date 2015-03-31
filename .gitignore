@@ -1,3 +1,4 @@
 *.Rda
 *.csv
+/Data/
 !/Submissions/
