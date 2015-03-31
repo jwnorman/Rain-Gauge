@@ -1,9 +1,9 @@
 # libraries
 library(data.table)
-trainExpected <- fread("train_2013.csv", select="Expected") #example of select
 
 # directory prefix
-directory <- "~/Documents/Kaggle/Rain/Rain-Gauge/Data/"
+directory <- "~/Documents/Kaggle/Rain/Rain-Gauge/Data/" # Mac
+directory <- "C://Kaggle - other//Rain//Rain-Gauge//Data//" # PC
 
 # Load data
 load(file=paste(directory, "trUnlisted.Rda", sep=''))
@@ -26,7 +26,7 @@ load(file=paste(directory, "teMissing.Rda", sep=''))
 # 999	: type5
 
 variablesWithMissing <- apply(tr.Unlisted, MARGIN=2, function(x) {
-	any(x %in% c("-99900.0", "-99901.0", "-99903.0", "nan", "999.0"))
+	any(x %in% c("-99900.0", "-99901.0", "-99903.0", "nan", "999.0")) # not working on pc...
 })
 variablesWithMissing <- names(variablesWithMissing[variablesWithMissing])
 
@@ -71,7 +71,7 @@ for (i in 1:ncol(tr.Missing)) {
 # te.Missing
 te.Missing <- data.frame(matrix(0, nrow=nrow(te.Unlisted), ncol=length(variablesWithMissing.names)))
 names(te.Missing) <- variablesWithMissing.names
-test <- data.frame(matrix(0, nrow=500, ncol=length(variablesWithMissing.names)))
+# test <- data.frame(matrix(0, nrow=500, ncol=length(variablesWithMissing.names)))
 for (i in 1:ncol(te.Missing)) {
 	#test[,i] <- produceMissingVariable(
 	#					head(te.Unlisted[,variablesWithMissing[i]], 500)

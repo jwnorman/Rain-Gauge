@@ -1,9 +1,9 @@
 # libraries
 library(data.table)
-trainExpected <- fread("train_2013.csv", select="Expected") #example of select
 
 # directory prefix
-directory <- "~/Documents/Kaggle/Rain/Rain-Gauge/Data/"
+directory <- "~/Documents/Kaggle/Rain/Rain-Gauge/Data/" # Mac
+directory <- "C://Kaggle - other//Rain//Rain-Gauge//Data//" # PC
 
 # import data
 tr <- fread(paste(directory, "train_2013.csv", sep=''), header = TRUE,
@@ -21,7 +21,7 @@ te <- fread(paste(directory, "test_2014.csv", sep=''), header = TRUE,
 			   	"character", "character", "character", "character", 
 			   	"character", "character", "character"),
 			   	stringsAsFactors = FALSE, nrow = 630453)
-tr <- as.data.frame(tr) # I'm not very familiar with data.table yet
+tr <- as.data.frame(tr)
 te <- as.data.frame(te)
 	   			   				  
 # load existing data
@@ -29,7 +29,6 @@ load(file=paste(directory, "trUnlisted.Rda", sep=''))
 load(file=paste(directory, "teUnlisted.Rda", sep=''))
 load(file=paste(directory, "trMissing.Rda", sep=''))
 load(file=paste(directory, "teMissing.Rda", sep=''))
-
 
 # # Create jumbo training and testing dataset, tr.Unlisted and te.Unlisted
 # # tr and te have multiple observations per column for only one response
@@ -49,7 +48,7 @@ id_Lengths_te <- sapply(te[,2], function(x) { # 2 is arbitrary
 
 id_tr <- rep(tr$Id, id_Lengths_tr)
 id_te <- rep(te$Id, id_Lengths_te)
-Expected <- rep(tr$Expected, id_tr)
+Expected <- rep(tr$Expected, id_Lengths_tr)
 
 # Create jumbo data frame
 tr.Unlisted <- data.frame(id_tr, matrix(0, nrow=length(id_tr), ncol=length(tr)-2), Expected)
@@ -63,9 +62,6 @@ for (i in 2:19) {
 	te.Unlisted[,i] <- unlist(strsplit(te[,i], split=' '))
 }
 names(te.Unlisted) <- names(te)
-
-save(tr.Unlisted, file=paste(directory, "trUnlisted.Rda", sep=''))
-save(te.Unlisted, file=paste(directory, "teUnlisted.Rda", sep=''))
 
 ## Correct the classes of all the variables in tr.Unlisted and te.Unlisted
 ## Probably should've dealt with this when first making *.Unlisted
@@ -113,3 +109,7 @@ te.Unlisted$MassWeightedSD <- as.numeric(te.Unlisted$MassWeightedSD)
 # To calculate Kdp, use the following formula
 tr.Unlisted$Kdp <- exp(log(abs(tr.Unlisted$RR3)/40.6)/0.866)*sign(tr.Unlisted$RR3)
 te.Unlisted$Kdp <- exp(log(abs(te.Unlisted$RR3)/40.6)/0.866)*sign(te.Unlisted$RR3)
+
+# Save
+save(tr.Unlisted, file=paste(directory, "trUnlisted.Rda", sep=''))
+save(te.Unlisted, file=paste(directory, "teUnlisted.Rda", sep=''))

@@ -1,7 +1,7 @@
 # explore data
 
 # directory prefix
-directory <- "~/Documents/Kaggle/Rain/Rain-Gauge/Data/"
+directory <- "~/Documents/Kaggle/Rain/Rain-Gauge/Data/" # Mac
 
 # load existing data
 load(file=paste(directory, "trUnlisted.Rda", sep=''))
