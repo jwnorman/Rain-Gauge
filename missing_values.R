@@ -26,11 +26,14 @@ load(file=paste(directory, "teMissing.Rda", sep=''))
 # 999	: type5
 
 variablesWithMissing <- apply(tr.Unlisted, MARGIN=2, function(x) {
-	any(x %in% c("-99900.0", "-99901.0", "-99903.0", "nan", "999.0")) # not working on pc...
+	any(x %in% c("-99900.0", "-99901.0", "-99903.0", "nan", "999.0")) # works for mac; doesn't work for pc
+	# any(x %in% c(-99900, -99901, -99903, NaN, 999)) # neither does this, even though it works below
 })
-variablesWithMissing <- names(variablesWithMissing[variablesWithMissing])
+any(tr.Unlisted[,20] %in% c(-99900, -99901, -99903, NaN, 999)) # 4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+variablesWithMissing <- names(variablesWithMissing[variablesWithMissing]) # Mac
+variablesWithMissing <- names(tr.Unlisted[,c(4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19)]) # PC
 
-# make sure there aren't any differences with the testing dataset
+# make sure there aren't any differences with the testing dataset (Mac only)
 # only difference: no missing in te.Unlisted$Reflectivity; nothing to worry about
 variablesWithMissing.te <- apply(te.Unlisted, MARGIN=2, function(x) {
 	any(x %in% c("-99900.0", "-99901.0", "-99903.0", "nan", "999.0"))
@@ -87,8 +90,12 @@ save(te.Missing, file=paste(directory, "teMissing.Rda", sep=''))
 # Replace the values of -99900.0, -99901.0, etc. with NA since the other values are already accounted for in *.Missing
 # Also, I'll need to be able to use arithmetic with the columns and I can't have these -99900's throwing it off.
 
+tr.Unlisted.backup <- tr.Unlisted
+te.Unlisted.backup <- te.Unlisted
+
 replaceWithActualNA <- function(variable) {
-	varWithNA <- ifelse(variable %in% c("-99900.0", "-99901.0", "-99903.0", "nan", "999.0"), NA, variable)
+	# varWithNA <- ifelse(variable %in% c("-99900.0", "-99901.0", "-99903.0", "nan", "999.0"), NA, variable) # mac
+	# varWithNA <- ifelse(variable %in% c(-99900, -99901, -99903, NaN, 999), NA, variable) # pc
 	return(varWithNA)
 }
 
