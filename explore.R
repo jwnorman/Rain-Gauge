@@ -2,6 +2,7 @@
 
 # directory prefix
 directory <- "~/Documents/Kaggle/Rain/Rain-Gauge/Data/" # Mac
+directory <- "C://Kaggle - other//Rain//Rain-Gauge//Data//" # PC
 
 # load existing data
 load(file=paste(directory, "trUnlisted.Rda", sep=''))
