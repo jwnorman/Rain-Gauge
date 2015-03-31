@@ -59,6 +59,8 @@ Rain Details
 
 Variable Notes
 ==============
+- Expected
+	- Peaks of common millimeters: 0,1,2,3,14,28,43,57,72,86,100, and so on for this 14/15 mm difference pattern
 
 - TimeToEnd
 	- no missing values
@@ -68,3 +70,4 @@ Variable Notes
 		- goes up from about .245 to .268 so for small but noticeable difference
 		- nonlinear increase
 	- near 0 correlation with all other integer/numeric explanatory variables
+	- Given there was some rain, as TimeToEnd increases, the average amount rained decreases ever so slightly (24.79 to 20.16); outliers are 0 and 61 mm; the median is practically always 1.3 exactly.
