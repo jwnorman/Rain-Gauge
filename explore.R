@@ -9,6 +9,17 @@ load(file=paste(directory, "trUnlisted.Rda", sep=''))
 load(file=paste(directory, "teUnlisted.Rda", sep=''))
 load(file=paste(directory, "trMissing.Rda", sep=''))
 load(file=paste(directory, "teMissing.Rda", sep=''))
+load(file=paste(directory, "tr.Rda", sep=''))
+load(file=paste(directory, "trm.Rda", sep=''))
+load(file=paste(directory, "te.Rda", sep=''))
+load(file=paste(directory, "tem.Rda", sep=''))
+
+# # # How does explnatory variables interact with other?
+numberVariables <- c(2:5,7:21)
+changingVariables <- c(2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21) # variables that change from one reading to the next (same Id), with Expected as the exception
+staticVariables <- c(1,3,20) # variables that stay the same from one reading to the next (same Id)
+cortab.Unlisted <- cor(tr.Unlisted[,intersect(numberVariables, changingVariables)], use="complete.obs")
+cortab <- cor(tr[,intersect(numberVariables, staticVariables)], use="complete.obs")
 
 # # # TimeToEnd
 head(tr.Unlisted$TimeToEnd,50)
@@ -16,11 +27,7 @@ summary(tr.Unlisted$TimeToEnd)
 plot(density(tr.Unlisted$TimeToEnd))
 prop.table(table(tr.Unlisted$TimeToEnd))
 
-# # How does TimeToEnd interact with other explanatory variables?
-cortab <- cor(tr.Unlisted[,c(2:5,7:20)], use="complete.obs")
-
 # # Look at How TimeToEnd interacts with Expected == 0 or != 0
-
 # by looking at the counts
 plot(table(tr.Unlisted$Expected==0, tr.Unlisted$TimeToEnd)[2,], col="red") # == 0
 points(table(tr.Unlisted$Expected==0, tr.Unlisted$TimeToEnd)[1,], col="blue") # != 0
@@ -30,7 +37,6 @@ dis <- prop.table(table(tr.Unlisted$Expected==0, tr.Unlisted$TimeToEnd), margin=
 plot(dis[1,1:60])
 
 # # Given there is some rain, how does TimeToEnd interact with Expected now?
-
 # using mean as comparison
 plot(tapply(tr.Unlisted$Expected[tr.Unlisted$Expected > 0], tr.Unlisted$TimeToEnd[tr.Unlisted$Expected > 0], mean)) # mean decrease as TimeToEnd goes up?
 
@@ -58,11 +64,24 @@ table(tr.Unlisted$TimeToEnd[tr.Unlisted$Expected %in% 0:100], tr.Unlisted$Expect
 # compare to overall mm dist
 plot(table(tr.Unlisted$Expected[tr.Unlisted$Expected %in% 5:100])) # same thing: 1,2,3, 14, 28, 43, 57, 72, 86, 100,... so it doesn't have to do with TimeToEnd; just Expected
 
+plot(tapply(tr$RadarQualityIndex, tr$TimeToEnd, mean, na.rm=TRUE))
+
+# # # DistanceToRadar
+attach(tr)
+head(tr.UnlistedDistanceToRadar, 100) # for each Id, the DistanceToRadar doesn't vary
+any(is.na(DistanceToRadar))
+plot(density((DistanceToRadar))) # similar dist to TimeToEnd (fairly uniform over 0 to 100)
+plot(tapply(Expected, DistanceToRadar, mean, na.rm=TRUE))
+plot(tapply(Expected[Expected>0], DistanceToRadar[Expected>0], mean, na.rm=TRUE), ylim=c(2,20))
+plot(tapply(RadarQualityIndex, DistanceToRadar, mean, na.rm=TRUE)) # random
+
 # # # HydrometeorType
 prop.table(table(tr.Unlisted$Expected==0)) # .2581745
 prop.table(table(tr.Unlisted$Expected==0, tr.Unlisted$HydrometeorType)) 
+prop.table(table(tr.Unlisted$Expected==0, tr.Unlisted$HydrometeorType), margin=2) 
 table(tr.Unlisted$Expected==0, tr.Unlisted$HydrometeorType)
 # c(1, 10, 13, 2, 3, 4, 9) = more rain than not rain
 # c(11, 5, 6, 7, 8) = less rain than not rain
-fit <- lm(tr.Unlisted$Expected ~ tr.Unlisted$HydrometeorType)
-summary(fit)
+
+# # # RadarQualityIndex
+plot(density(RadarQualityIndex[RadarQualityIndex<=1], na.rm=TRUE))
