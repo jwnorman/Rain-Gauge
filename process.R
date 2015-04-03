@@ -123,6 +123,35 @@ trm <- tr.Missing[tr.Unlisted$IdFirst==1,]
 te <- te.Unlisted[te.Unlisted$IdFirst==1,]
 tem <- te.Missing[te.Unlisted$IdFirst==1,]
 
+# Create variable to mark how many hours each Id lasts. 57 54 51 48 57 53 would be 2 hours
+# hmm, how to do this?
+head(cbind(tr.Unlisted$Id, tr.Unlisted$TimeToEnd), 100)
+head(cbind(tr.Unlisted$Id, c(1,diff(tr.Unlisted$TimeToEnd))), 100)
+
+# Create new dataset that's collapsed like tr and te and allow for feature extractions from different variables per Id like RR1.mean, RR1.median, etc.
+# problem: why do the lengths differ?!
+RR1.mean <- tapply(tr.Unlisted$RR1, tr.Unlisted$Id, mean, na.rm = TRUE)
+nrow(RR1.mean) # = length(unique(tr.Unlisted$Id)) # 1126694
+length(which(tr.Unlisted$IdFirst==1)) # 1126454
+nrow(tr) # 1126454
+nrow(tr.Unlisted) # 8937958
+
+# which ids don't have an IdFirst of 1 at all?
+test <- prop.table(table(tr.Unlisted$Id, tr.Unlisted$IdFirst),margin=1)
+length(which(test[,2]==0))
+head(which(test[,2]==0))
+tr.Unlisted[tr.Unlisted$Id %in% 8403:8411, ]
+tr[tr$Id == 8407,]
+RR1.mean[8406]
+
+
+
+RR1.mean.df <- data.frame(Id=row.names(RR1.mean), RR1.mean=RR1.mean)
+tr.Unlisted.2 <- merge(tr, RR1.mean.df, by="Id")
+length(which(is.na(tr.Unlisted.2$RR1.mean)))
+head(RR1.mean, 1007)
+?merge
+
 # Save
 save(tr.Unlisted, file=paste(directory, "trUnlisted.Rda", sep=''))
 save(te.Unlisted, file=paste(directory, "teUnlisted.Rda", sep=''))
