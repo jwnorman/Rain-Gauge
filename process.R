@@ -29,6 +29,10 @@ load(file=paste(directory, "trUnlisted.Rda", sep=''))
 load(file=paste(directory, "teUnlisted.Rda", sep=''))
 load(file=paste(directory, "trMissing.Rda", sep=''))
 load(file=paste(directory, "teMissing.Rda", sep=''))
+load(file=paste(directory, "tr.Rda", sep=''))
+load(file=paste(directory, "trm.Rda", sep=''))
+load(file=paste(directory, "te.Rda", sep=''))
+load(file=paste(directory, "tem.Rda", sep=''))
 
 # # Create jumbo training and testing dataset, tr.Unlisted and te.Unlisted
 # # tr and te have multiple observations per column for only one response
@@ -110,6 +114,19 @@ te.Unlisted$MassWeightedSD <- as.numeric(te.Unlisted$MassWeightedSD)
 tr.Unlisted$Kdp <- exp(log(abs(tr.Unlisted$RR3)/40.6)/0.866)*sign(tr.Unlisted$RR3)
 te.Unlisted$Kdp <- exp(log(abs(te.Unlisted$RR3)/40.6)/0.866)*sign(te.Unlisted$RR3)
 
+# Create variable to mark the beginning of each new Id
+# Then you can create smaller dataset for variables like DistanceToRadar which are the same for each Id
+tr.Unlisted$IdFirst <- c(1, diff(tr.Unlisted$Id))
+te.Unlisted$IdFirst <- c(1, diff(te.Unlisted$Id))
+tr <- tr.Unlisted[tr.Unlisted$IdFirst==1,]
+trm <- tr.Missing[tr.Unlisted$IdFirst==1,]
+te <- te.Unlisted[te.Unlisted$IdFirst==1,]
+tem <- te.Missing[te.Unlisted$IdFirst==1,]
+
 # Save
 save(tr.Unlisted, file=paste(directory, "trUnlisted.Rda", sep=''))
 save(te.Unlisted, file=paste(directory, "teUnlisted.Rda", sep=''))
+save(tr, file=paste(directory, "tr.Rda", sep=''))
+save(trm, file=paste(directory, "trm.Rda", sep=''))
+save(te, file=paste(directory, "te.Rda", sep=''))
+save(tem, file=paste(directory, "tem.Rda", sep=''))
