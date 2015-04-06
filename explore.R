@@ -10,9 +10,7 @@ load(file=paste(directory, "teUnlisted.Rda", sep=''))
 load(file=paste(directory, "trMissing.Rda", sep=''))
 load(file=paste(directory, "teMissing.Rda", sep=''))
 load(file=paste(directory, "tr.Rda", sep=''))
-load(file=paste(directory, "trm.Rda", sep=''))
 load(file=paste(directory, "te.Rda", sep=''))
-load(file=paste(directory, "tem.Rda", sep=''))
 
 # # # How does explnatory variables interact with other?
 numberVariables <- c(2:5,7:21)

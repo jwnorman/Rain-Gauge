@@ -1,5 +1,6 @@
 # libraries
 library(data.table)
+library(plyr)
 
 # directory prefix
 directory <- "~/Documents/Kaggle/Rain/Rain-Gauge/Data/" # Mac
@@ -30,9 +31,7 @@ load(file=paste(directory, "teUnlisted.Rda", sep=''))
 load(file=paste(directory, "trMissing.Rda", sep=''))
 load(file=paste(directory, "teMissing.Rda", sep=''))
 load(file=paste(directory, "tr.Rda", sep=''))
-load(file=paste(directory, "trm.Rda", sep=''))
 load(file=paste(directory, "te.Rda", sep=''))
-load(file=paste(directory, "tem.Rda", sep=''))
 
 # # Create jumbo training and testing dataset, tr.Unlisted and te.Unlisted
 # # tr and te have multiple observations per column for only one response
@@ -123,8 +122,12 @@ tr <- tr.Unlisted[tr.Unlisted$IdFirst>0, c("Id", "DistanceToRadar", "Expected")]
 te <- te.Unlisted[te.Unlisted$IdFirst>0, c("Id", "DistanceToRadar")]
 
 # Add to tr and te feature extractions from different variables per Id like RR1.mean, RR1.median, etc.
+# see dlply()
 tr$numMeasurements <- table(tr.Unlisted$Id)
 te$numMeasurements <- table(te.Unlisted$Id)
+numHours <- dlply(.data=tr.Unlisted, .variables="Id", .fun=function(x) {
+	length(which(diff(x) >= 0)) + 1
+}, .parallel=TRUE)
 # test <- sapply(tr.Unlisted$Id, function(x) {
 #	length(which(diff(x) >= 0)) + 1
 # })
