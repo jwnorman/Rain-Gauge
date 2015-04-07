@@ -1,5 +1,8 @@
 *.Rda
 *.csv
+*.
+*.exe
+*.stackdump
 .DS_Store
 /Data/
 !/Submissions/
