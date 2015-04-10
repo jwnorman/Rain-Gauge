@@ -1,28 +1,23 @@
 #include <iostream>
 #include <fstream>
-#include <cmath>
 #include <string>
 #include <cstring>
-#include <cstdio>
 #include <sstream>
-#include <iomanip>
 #include <vector>
 
 using namespace std;
 
 void calculate(string numbers, double (&storage)[2]); // hardcoded
-void printData(string headers[], double stats[][2*20], int nr); // hardcoded
-void write2File(double stats[][2*20], int nr);
 double calcMean(vector<string>);
 double calcMedian(vector<string>);
 double calcRange(vector<string>);
 
 int main(int argc, const char * argv[]) {
-	if (argc == 1) {
-		cout << "No argument given; the data file to be read needs to be given." << endl;
+	if (argc == 1 || argc == 2) {
+		cout << "Missing an argument. Need a data input file and an empty output file." << endl;
 		return(0);
 	} 
-	int NROWS = 1126695;
+	int NROWS = 3;
 	int NCOLS = 20;
 	ifstream datafile;
 	ofstream rainSummary;
@@ -30,12 +25,10 @@ int main(int argc, const char * argv[]) {
 	string temp;
 	string *colNames = new string[NCOLS];
 	string funNames[] = {"mean", "range"};
-	// int *dataCollector = new int[NROWS][2*20]; // 2 corresponds to number of functions; 20 corresponds to number of columns. How do do this dynamicall? Vectors I guess...
-	// double dataCollector[5][2*20]; // too large to allocate when NROWS is large!
 	double statsTemp[2]; // hardcoded
 
 	datafile.open(argv[1]);
-	rainSummary.open ("rainSummary.csv");
+	rainSummary.open (argv[2]);
 	if (datafile.good()) {
 		for (int nrow = 0; nrow < NROWS; nrow++) {
 			stringstream iss; // needed in for loop to be reset. what's the better way to reset?
@@ -47,8 +40,6 @@ int main(int argc, const char * argv[]) {
 					colNames[ncol] = temp;
 				} else {
 					calculate(temp, statsTemp);
-					// dataCollector[nrow][ncol*2] = statsTemp[0];
-					// dataCollector[nrow][ncol*2+1] = statsTemp[1];
 					if (ncol*2+1 != NCOLS*2-1) {
 						rainSummary << statsTemp[0] << ",";
 						rainSummary << statsTemp[1] << ",";
@@ -63,12 +54,9 @@ int main(int argc, const char * argv[]) {
 	}
 	datafile.close();
 	rainSummary.close();
-	// printData(colNames, dataCollector, NROWS);
-	// write2File(dataCollector, NROWS);
 }
 
 void calculate(string numbers, double (&storage)[2]) { // hardcoded
-	// break string to numbers
 	vector<string> tokens;
 	istringstream iss(numbers);
 	do {
@@ -119,25 +107,4 @@ double calcRange(vector<string> numbers) {
 		range = -99900.0;
 	}
 	return(range);
-}
-
-void printData(string headers[], double stats[][2*20], int nr) {
-	for (int i = 1; i < nr; i++) {
-		for (int j=0; j < 2*19-1; j++) { // hardcoded
-			cout << stats[i][j] << ",";
-		}
-		cout << stats[i][2*19] << endl << endl;
-	}
-}
-
-void write2File(double stats[][2*20], int nr) {
-	ofstream datafile;
-	datafile.open ("data.csv");
-	for (int i = 1; i < nr; i++) {
-		for (int j=0; j < 2*19-1; j++) { // hardcoded
-			datafile << stats[i][j] << ",";
-		}
-		datafile << stats[i][2*19] << endl << endl;
-	}
-	datafile.close();
 }
