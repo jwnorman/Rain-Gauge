@@ -14,7 +14,7 @@ double calcMedian(vector<string>);
 double calcRange(vector<string>);
 
 int main(int argc, const char * argv[]) {
-	if (argc == 1 || argc == 2 || argc == 3 || argc == 4) {
+	if (argc != 5) {
 		cout << "Usage: ./extract <input file> <output file> <nrows> <ncols>" << endl;
 		return(0);
 	} 
