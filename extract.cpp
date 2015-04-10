@@ -76,7 +76,10 @@ double calcMean(vector<string> numbers) {
 	for (vector<string>::iterator it = numbers.begin();
 		 it != numbers.end();
 		 it++) {
-		if (!(*it == "-99900.0" || *it == "-99901.0" || *it == "-99902.0" || *it == "=99903.0" || *it == "nan" || *it == "999.0" || *it == "" || *it == " " || *it == "\n")) {
+		if (!(*it == "-99900.0" || *it == "-99901.0" || 
+			  *it == "-99902.0" || *it == "=99903.0" || 
+			  *it == "nan" || *it == "999.0" || 
+			  *it == "" || *it == " " || *it == "\n")) {
 			n++;
 			sum += stod(*it);
 		}
@@ -92,11 +95,14 @@ double calcRange(vector<string> numbers) {
 	for (vector<string>::iterator it = numbers.begin();
 		 it != numbers.end();
 		 it++) {
-		if (!(*it == "-99900.0" || *it == "-99901.0" || *it == "-99902.0" || *it == "=99903.0" || *it == "nan" || *it == "999.0" || *it == "" || *it == " " || *it == "\n")) {
-			if ((stod(*it) < min)) {
+		if (!(*it == "-99900.0" || *it == "-99901.0" || 
+			  *it == "-99902.0" || *it == "=99903.0" || 
+			  *it == "nan" || *it == "999.0" || 
+			  *it == "" || *it == " " || *it == "\n")) {
+			if (min == 99999 || (stod(*it) < min)) {
 				min = stod(*it);
 			}
-			if (!max || (stod(*it) > max)) {
+			if (max == -99999 || (stod(*it) > max)) {
 				max = stod(*it);
 			}
 		}
