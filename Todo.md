@@ -16,4 +16,4 @@ Todo
 - ~~Create function to "grade" a set of guesses (CRPS)~~
 - ~~Create the ability to condense tr.Unlisted to tr (so each Id has only one row)~~
 - Create new dataset that's collapsed like tr and te where there is one measurement per Id but instead of RR1, HydrometeorType, and Zdr, I have RR1.mean, RR1.median, RR1.sd, HydrometeorType.mode (since its categorical), Zdr.mean, Zdr.median, and Zdr.sd. And so on.
-- Write a C++ program to read in the data, and calculate features per Id; too slow in R
+- ~~Write a C++ program to read in the data, and calculate features per Id; too slow in R.~~
