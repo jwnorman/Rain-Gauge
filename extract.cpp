@@ -4,6 +4,7 @@
 #include <cstring>
 #include <sstream>
 #include <vector>
+//#include <cstdio>
 
 using namespace std;
 
@@ -13,12 +14,12 @@ double calcMedian(vector<string>);
 double calcRange(vector<string>);
 
 int main(int argc, const char * argv[]) {
-	if (argc == 1 || argc == 2) {
-		cout << "Missing an argument. Need a data input file and an empty output file." << endl;
+	if (argc == 1 || argc == 2 || argc == 3 || argc == 4) {
+		cout << "Usage: ./extract <input file> <output file> <nrows> <ncols>" << endl;
 		return(0);
 	} 
-	int NROWS = 3;
-	int NCOLS = 20;
+	int NROWS = atoi(argv[3]);
+	int NCOLS = atoi(argv[4]);
 	ifstream datafile;
 	ofstream rainSummary;
 	string linetemp;
@@ -47,7 +48,6 @@ int main(int argc, const char * argv[]) {
 						rainSummary << statsTemp[0] << ",";
 						rainSummary << statsTemp[1] << endl;
 					}
-					
 				} // else
 			}  // for
 		} // if
