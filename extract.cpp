@@ -77,7 +77,7 @@ double calcMean(vector<string> numbers) {
 		 it != numbers.end();
 		 it++) {
 		if (!(*it == "-99900.0" || *it == "-99901.0" || 
-			  *it == "-99902.0" || *it == "=99903.0" || 
+			  *it == "-99902.0" || *it == "-99903.0" || 
 			  *it == "nan" || *it == "999.0" || 
 			  *it == "" || *it == " " || *it == "\n")) {
 			n++;
