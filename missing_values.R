@@ -13,6 +13,8 @@ tr <- apply(tr, MARGIN=2, function(column) {
 te <- apply(te, MARGIN=2, function(column) {
 	ifelse(column==-99900, NA, column)
 })
+tr <- as.data.frame(tr)
+te <- as.data.frame(te)
 
 # Save data
 save(tr, file=paste(directory, "tr.Rda", sep=''))
