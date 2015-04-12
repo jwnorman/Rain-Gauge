@@ -4,14 +4,12 @@
 #include <cstring>
 #include <sstream>
 #include <vector>
-//#include <cstdio>
 
 using namespace std;
 
-void calculate(string numbers, double (&storage)[2]); // hardcoded
-double calcMean(vector<string>);
-double calcMedian(vector<string>);
-double calcRange(vector<string>);
+void calculate(string, vector<double>&);
+double mean(vector<string>);
+double range(vector<string>);
 
 int main(int argc, const char * argv[]) {
 	if (argc != 5) {
@@ -20,13 +18,12 @@ int main(int argc, const char * argv[]) {
 	} 
 	int NROWS = atoi(argv[3]);
 	int NCOLS = atoi(argv[4]);
+	int numFunctions = 2; // mean, range
 	ifstream datafile;
 	ofstream rainSummary;
 	string linetemp;
 	string temp;
-	string *colNames = new string[NCOLS];
-	string funNames[] = {"mean", "range"};
-	double statsTemp[2]; // hardcoded
+	vector<double> statsTemp;
 
 	datafile.open(argv[1]);
 	rainSummary.open (argv[2]);
@@ -37,17 +34,25 @@ int main(int argc, const char * argv[]) {
 			iss << linetemp;
 			for (int ncol = 0; ncol < NCOLS; ncol++) {
 				getline(iss, temp, ',');
-				if (nrow == 0) { // grab header names
-					colNames[ncol] = temp;
+				if (nrow == 0) {
+					// do nothing
 				} else {
 					calculate(temp, statsTemp);
-					if (ncol*2+1 != NCOLS*2-1) {
-						rainSummary << statsTemp[0] << ",";
-						rainSummary << statsTemp[1] << ",";
+					if (ncol*numFunctions+1 != NCOLS*numFunctions-1) {
+						for (vector<double>::iterator it = statsTemp.begin();
+			 				 it != statsTemp.end();
+							 it++) {
+							rainSummary << *it << ",";
+						}
 					} else {
-						rainSummary << statsTemp[0] << ",";
-						rainSummary << statsTemp[1] << endl;
+						for (vector<double>::iterator it = statsTemp.begin();
+			 				 (it + 1) != statsTemp.end(); // will this work?
+							 it++) {
+							rainSummary << *it << ",";
+						}
+						rainSummary << statsTemp[statsTemp.size()-1] << endl;
 					}
+					statsTemp.clear();
 				} // else
 			}  // for
 		} // if
@@ -56,7 +61,7 @@ int main(int argc, const char * argv[]) {
 	rainSummary.close();
 }
 
-void calculate(string numbers, double (&storage)[2]) { // hardcoded
+void calculate(string numbers, vector<double>& storage) {
 	vector<string> tokens;
 	istringstream iss(numbers);
 	do {
@@ -65,11 +70,11 @@ void calculate(string numbers, double (&storage)[2]) { // hardcoded
 		tokens.push_back(temp);
 	} while(iss);
 
-	storage[0] = calcMean(tokens);
-	storage[1] = calcRange(tokens);
+	storage.push_back(mean(tokens));
+	storage.push_back(range(tokens));
 }
 
-double calcMean(vector<string> numbers) {
+double mean(vector<string> numbers) {
 	int n = 0;
 	double sum = 0.0;
 	double mean = 0.0;
@@ -88,7 +93,7 @@ double calcMean(vector<string> numbers) {
 	return(mean);
 }
 
-double calcRange(vector<string> numbers) {
+double range(vector<string> numbers) {
 	double range = 0.0;
 	double min =  99999;
 	double max = -99999;
