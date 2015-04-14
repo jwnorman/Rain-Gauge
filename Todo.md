@@ -8,7 +8,7 @@ Todo
 - ~~Calculate the true value for Kdp instead of the incorrect all-0 current Kdp~~
 - ~~For every variable that has missing values, create a separate column that has factors for each type of missing value in case the type of missing value is predictive.~~
 - ~~Then get rid of the current codes (-99901.0, -99900.0, etc.) to be R's NA so that R doesn't treat -99901.0 as what it looks like~~
-- Explore: each day, explore a different variable; start off with TimeToEnd, then DistanceToRadar, and so on. Keep notes and observations on Notes.md
+- ~~Explore: each day, explore a different variable; start off with TimeToEnd, then DistanceToRadar, and so on. Keep notes and observations on Notes.md~~
 - Create new variable noting the number of hours for each Id using TimeToEnd. If TimeToEnd for a partic Id is 59 20 58 40 30, then numHours is 2
 - ~~Create new variable to note the first measurement of each Id~~
 - Create new variable to note not just the first measurement of each Id, but the nth measurement. So if Id 1 has 10 measurements, then this new variable would be 1:10.
