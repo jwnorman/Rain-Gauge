@@ -3,6 +3,7 @@
 *.
 *.exe
 *.stackdump
+*.history
 .DS_Store
 /Data/
 !/Submissions/
