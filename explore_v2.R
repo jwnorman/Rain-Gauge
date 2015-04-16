@@ -10,6 +10,7 @@ load(file=paste(directory, "tr.Rda", sep=''))
 load(file=paste(directory, "te.Rda", sep=''))
 load(file=paste(directory, "train.Rda", sep=''))
 load(file=paste(directory, "test.Rda", sep=''))
+load(file=paste(directory, "cdfs.Rda", sep=''))
 
 # # # How does explnatory variables interact with other?
 cortab <- cor(tr, use="complete.obs")
