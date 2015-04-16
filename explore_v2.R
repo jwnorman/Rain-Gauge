@@ -95,6 +95,6 @@ names(cdfs) <- c("Id", paste("Predicted", 0:69, sep=''))
 save(probsByMM, file=paste(directory, "probsByMM.Rda", sep=''))
 save(cdfs, file=paste(directory, "cdfs.Rda", sep=''))
 
-write.csv(probsByMM, file=paste(directory, "cdfs.csv", sep=''), row.names=FALSE)
+write.csv(cdfs, file=paste(directory, "cdfs.csv", sep=''), row.names=FALSE)
 
 

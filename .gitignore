@@ -4,6 +4,7 @@
 *.exe
 *.stackdump
 *.history
+*.zip
 .DS_Store
 /Data/
 !/Submissions/
