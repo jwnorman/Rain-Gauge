@@ -45,6 +45,7 @@ apply(test, MARGIN=2, function(x){ length(which((is.na(x)))) })
 apply(combined, MARGIN=2, function(x){ length(which((is.na(x)))) })
 
 # find max densities of each variable
+# should this be moved in to process.R?
 maxDensities <- apply(combined, MARGIN=2, function(col) {
 	densTemp <- density(col, na.rm=TRUE)
 	densTemp$x[densTemp$y == max(densTemp$y)]
@@ -71,7 +72,29 @@ train$e <- tr$Expected.mean
 save(train, file=paste(directory, "train.Rda", sep=''))
 save(test, file=paste(directory, "test.Rda", sep=''))
 
+# Create function to estimate % density at 0mm, 1mm, ..., 69mm
+# turn expected into binary: 0 for not xmm, 1 for xmm (where x is 0:69)
+# run logistic regression and obtain percentages for 1 (xmm)
+# after running 70 logistic regressions, you'll have 70 estimates for each observation
+# for each observation, cumsum() the estimations and scale to equal 1
 
+probsByMM <- as.data.frame(sapply(0:69, function(mm) {
+	tempExpected <- ifelse(train$e >= (mm - .5) & train$e <= (mm + .5), 1, 0)
+	tempFit <- glm(tempExpected ~ rr1m + rr1r + rm + rr + rhvm + rhvr, family = "binomial", data = train)
+	predict(tempFit, test, type="response")
+}))
 
+cdfs <- as.data.frame(t(sapply(1:nrow(probsByMM), function(rownum) {
+	tempCum <- cumsum(probsByMM[rownum, ])
+	Cum <- tempCum/tempCum[length(tempCum)]
+})))
+cdfs$Id <- test$id
+cdfs <- cdfs[,c(71,1:70)]
+names(cdfs) <- c("Id", paste("Predicted", 0:69, sep=''))
+
+save(probsByMM, file=paste(directory, "probsByMM.Rda", sep=''))
+save(cdfs, file=paste(directory, "cdfs.Rda", sep=''))
+
+write.csv(probsByMM, file=paste(directory, "cdfs.csv", sep=''), row.names=FALSE)
 
 
