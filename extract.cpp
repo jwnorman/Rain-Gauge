@@ -10,6 +10,7 @@ using namespace std;
 void calculate(string, vector<double>&);
 double mean(vector<string>);
 double range(vector<string>);
+double meanDiff(vector<string>);
 
 int main(int argc, const char * argv[]) {
 	if (argc != 5) {
@@ -89,14 +90,14 @@ double mean(vector<string> numbers) {
 			sum += stod(*it);
 		}
 	}
-	mean = (n > 0) ? (sum / n) : (-99900.0);
+	mean = (n > 0) ? (sum / n) : (-99999.0);
 	return(mean);
 }
 
 double range(vector<string> numbers) {
 	double range = 0.0;
-	double min =  99999;
-	double max = -99999;
+	double min =  99999.0;
+	double max = -99999.0;
 	for (vector<string>::iterator it = numbers.begin();
 		 it != numbers.end();
 		 it++) {
@@ -104,14 +105,46 @@ double range(vector<string> numbers) {
 			  *it == "-99902.0" || *it == "-99903.0" || 
 			  *it == "nan" || *it == "999.0" || 
 			  *it == "" || *it == " " || *it == "\n")) {
-			if (min == 99999 || (stod(*it) < min)) {
+			if (min == 99999.0 || (stod(*it) < min)) {
 				min = stod(*it);
 			}
-			if (max == -99999 || (stod(*it) > max)) {
+			if (max == -99999.0 || (stod(*it) > max)) {
 				max = stod(*it);
 			}
 		}
 	}
-	range = (min != 99999) ? (max - min) : (-99900.0);
+	range = (min != 99999.0) ? (max - min) : (-99900.0);
 	return(range);
+}
+
+double meanDiff(vector<string> numbers) {
+	// eventually you should change this so
+	// it calculates the slope (with the time left til hour as
+	// the x value)
+	vector<int> nums;
+	double sum = 0.0;
+	int n = 0;
+	double mean;
+	for (vector<string>::iterator it = numbers.begin();
+		 it != numbers.end();
+		 it++) {
+		if (!(*it == "-99900.0" || *it == "-99901.0" || 
+			  *it == "-99902.0" || *it == "-99903.0" || 
+			  *it == "nan" || *it == "999.0" || 
+			  *it == "" || *it == " " || *it == "\n")) {
+			nums.push_back(*it);
+		}
+	}
+	if (nums.size() > 0) {
+		for (vector<int>::iterator it = nums.begin();
+			(it + 1) != nums.end();
+			it++) {
+			sum += (*(it + 1) - *it);
+			n++;
+		}
+		mean = sum/n;
+	} else {
+		mean = -99999;
+	}
+	return(mean);
 }
