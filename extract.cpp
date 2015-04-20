@@ -7,19 +7,21 @@
 
 using namespace std;
 
+void getDimension(string, int[2]&); // syntax is probably wrong
 void calculate(string, vector<double>&);
 double mean(vector<string>);
 double range(vector<string>);
 double meanDiff(vector<string>);
 
 int main(int argc, const char * argv[]) {
-	if (argc != 5) {
-		cout << "Usage: ./extract <input file> <output file> <nrows> <ncols>" << endl;
+	if (argc != 3) {
+		cout << "Usage: ./extract <input file> <output file>" << endl;
 		return(0);
 	} 
-	int NROWS = atoi(argv[3]);
-	int NCOLS = atoi(argv[4]);
-	int numFunctions = 2; // mean, range
+	int dim[2]; // nrow by ncol
+	// int NROWS = atoi(argv[3]);
+	// int NCOLS = atoi(argv[4]);
+	int numFunctions = 3;
 	vector<string> varsPerLineTemp;
 	ifstream datafile;
 	ofstream rainSummary;
@@ -27,40 +29,65 @@ int main(int argc, const char * argv[]) {
 	string temp;
 	vector<double> statsTemp;
 
+	getDimension(argv[1], dim);
+	int NROWS = dim[1];
+	int NCOLS = dim[2];
+
 	datafile.open(argv[1]);
 	rainSummary.open (argv[2]);
 	if (datafile.good()) {
 		for (int nrow = 0; nrow < NROWS; nrow++) {
-			stringstream iss; // needed in for loop to be reset. what's the better way to reset?
+			stringstream iss;
 			getline(datafile, linetemp);
 			iss << linetemp;
 			for (int ncol = 0; ncol < NCOLS; ncol++) {
 				getline(iss, temp, ',');
-				if (nrow == 0) {
-					// do nothing
-				} else {
-					calculate(temp, statsTemp);
-					if (ncol*numFunctions+1 != NCOLS*numFunctions-1) {
-						for (vector<double>::iterator it = statsTemp.begin();
-			 				 it != statsTemp.end();
-							 it++) {
-							rainSummary << *it << ",";
-						}
-					} else {
-						for (vector<double>::iterator it = statsTemp.begin();
-			 				 (it + 1) != statsTemp.end(); // will this work?
-							 it++) {
-							rainSummary << *it << ",";
-						}
-						rainSummary << statsTemp[statsTemp.size()-1] << endl;
+				if (nrow != 0) {
+					varsPerLineTemp.push_back(temp);
+				}
+			}
+			for (vector<string>::iterator it = varsPerLineTemp.begin();
+				 it != varsPerLineTemp.end(); it++) {
+				calculate(temp, statsTemp);
+				if (ncol*numFunctions+1 != NCOLS*numFunctions-1) {
+					for (vector<double>::iterator it = statsTemp.begin();
+		 				 it != statsTemp.end();
+						 it++) {
+						rainSummary << *it << ",";
 					}
-					statsTemp.clear();
-				} // else
-			}  // for
-		} // if
+				} else {
+					for (vector<double>::iterator it = statsTemp.begin();
+		 				 (it + 1) != statsTemp.end();
+						 it++) {
+						rainSummary << *it << ",";
+					}
+					rainSummary << statsTemp[statsTemp.size()-1] << endl;
+				}
+				statsTemp.clear();
+			}
+		}
 	}
-	datafile.close();
-	rainSummary.close();
+	datafile.close(); // close input file
+	rainSummary.close(); // close output file
+}
+
+void getDimension(string fn, int[2]& dimArr) {
+	int nrow = 0;
+	int ncol = 0;
+	string linetemp;
+	ifstream tempFile;
+	tempFile.open(fn);
+	while (datafile.good() && !datafile.eof()) {
+		getline(datafile, linetemp);
+		nrow++;
+		for (int col = 0; col < linetemp.length(); col++){
+			if (linetemp[col] == ',') {
+				ncol++;
+			}
+		}
+	}
+	dimArr[1] = nrow;
+	dimArr[2] = ncol;
 }
 
 void calculate(string numbers, vector<double>& storage) {
