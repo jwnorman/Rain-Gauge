@@ -20,6 +20,7 @@ int main(int argc, const char * argv[]) {
 	int NROWS = atoi(argv[3]);
 	int NCOLS = atoi(argv[4]);
 	int numFunctions = 2; // mean, range
+	vector<string> varsPerLineTemp;
 	ifstream datafile;
 	ofstream rainSummary;
 	string linetemp;
