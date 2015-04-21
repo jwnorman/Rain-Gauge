@@ -18,4 +18,5 @@ Todo
 - ~~Create new dataset that's collapsed like tr and te where there is one measurement per Id but instead of RR1, HydrometeorType, and Zdr, I have RR1.mean, RR1.median, RR1.sd, HydrometeorType.mode (since its categorical), Zdr.mean, Zdr.median, and Zdr.sd. And so on.~~
 - ~~Write a C++ program to read in the data, and calculate features per Id; too slow in R.~~
 - Implement more functions in C++ program; especially mode() for the variable HydrometeorTypes since that is a factor, not numerical.
+- When modeling the 69th mm as binomial, instead of mm > 68.5 and < 69.5, it should be strictly greater than 68.5
 - Extract variables in R that are relevant, i.e. Extract.range doesn't make sense
