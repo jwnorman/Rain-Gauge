@@ -9,16 +9,30 @@ directory <- "C://Kaggle - other//Rain//Rain-Gauge//Data//" # PC
 
 tr.header <- read.table(paste(directory, "train_2013.csv", sep=''), sep=',', nrow=1, header=FALSE, stringsAsFactors=FALSE)
 te.header <- read.table(paste(directory, "test_2014.csv", sep=''), sep=',', nrow=1, header=FALSE, stringsAsFactors=FALSE)
-tr.header <- paste(rep(tr.header, each=2), c(".mean", ".range"), sep='')
-te.header <- paste(rep(te.header, each=2), c(".mean", ".range"), sep='')
+# tr.header <- paste(rep(tr.header, each=2), c(".mean", ".range"), sep='')
+# te.header <- paste(rep(te.header, each=2), c(".mean", ".range"), sep='')
+tr.header <- paste(rep(tr.header, each=1), c(".diffMean"), sep='')
+te.header <- paste(rep(te.header, each=1), c(".diffMean"), sep='')
 
-tr <- fread(paste(directory, "trainSummary.csv", sep=''), 
+# tr <- fread(paste(directory, "trainSummary.csv", sep=''), 
+			# sep = ',',
+			# header = FALSE,
+			# colClasses = "numeric",
+			# nrow = 1126694)
+
+# te <- fread(paste(directory, "testSummary.csv", sep=''), 
+			# sep = ',',
+			# header = FALSE,
+			# colClasses = "numeric",
+			# nrow = 630452)
+			
+tr <- fread(paste(directory, "meanDiff.csv", sep=''), 
 			sep = ',',
 			header = FALSE,
 			colClasses = "numeric",
-			nrow = 1126694)
+			nrows = 1126694)
 
-te <- fread(paste(directory, "testSummary.csv", sep=''), 
+te <- fread(paste(directory, "meanDiffTest.csv", sep=''), 
 			sep = ',',
 			header = FALSE,
 			colClasses = "numeric",

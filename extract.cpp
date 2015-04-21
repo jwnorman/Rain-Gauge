@@ -23,6 +23,9 @@ int main(int argc, const char * argv[]) {
 	// int NCOLS = atoi(argv[4]);
 	int numFunctions = 3;
 	vector<string> varsPerLineTemp;
+	int NROWS = atoi(argv[3]);
+	int NCOLS = atoi(argv[4]);
+	int numFunctions = 1; // meanDiff
 	ifstream datafile;
 	ofstream rainSummary;
 	string linetemp;
@@ -99,8 +102,9 @@ void calculate(string numbers, vector<double>& storage) {
 		tokens.push_back(temp);
 	} while(iss);
 
-	storage.push_back(mean(tokens));
-	storage.push_back(range(tokens));
+	// storage.push_back(mean(tokens));
+	// storage.push_back(range(tokens));
+	storage.push_back(meanDiff(tokens));
 }
 
 double mean(vector<string> numbers) {
@@ -160,10 +164,10 @@ double meanDiff(vector<string> numbers) {
 			  *it == "-99902.0" || *it == "-99903.0" || 
 			  *it == "nan" || *it == "999.0" || 
 			  *it == "" || *it == " " || *it == "\n")) {
-			nums.push_back(*it);
+			nums.push_back(stod(*it));
 		}
 	}
-	if (nums.size() > 0) {
+	if (nums.size() > 1) {
 		for (vector<int>::iterator it = nums.begin();
 			(it + 1) != nums.end();
 			it++) {
