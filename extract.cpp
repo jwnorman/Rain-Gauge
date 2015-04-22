@@ -58,9 +58,10 @@ int main(int argc, const char * argv[]) {
 			int colCount = 1;
 			for (vector<string>::iterator it = varsPerLineTemp.begin();
 				 it != varsPerLineTemp.end(); it++, colCount++) {
-				if (colCount == 6) { // hydrometeor type
-					calculate(*it, statsTemp);
-				}
+				// if (colCount == 6) { // hydrometeor type
+				// 	calculate(*it, statsTemp);
+				// }
+				calculate(*it, statsTemp);
 			}
 			for (vector<double>::iterator it2 = statsTemp.begin();
  				 (it2+1) != statsTemp.end();
@@ -108,8 +109,8 @@ void calculate(string numbers, vector<double>& storage) {
 
 	// storage.push_back(mean(tokens));
 	// storage.push_back(range(tokens));
-	//storage.push_back(meanDiff(tokens));
-	storage.push_back(hydroMeteorMode(tokens));
+	storage.push_back(meanDiff(tokens));
+	// storage.push_back(hydroMeteorMode(tokens));
 }
 
 double mean(vector<string> numbers) {
@@ -155,7 +156,7 @@ double range(vector<string> numbers) {
 }
 
 double meanDiff(vector<string> numbers) {
-	vector<int> nums; // ints??
+	vector<double> nums; // ints??
 	double sum = 0.0;
 	int n = 0;
 	double mean;
@@ -170,7 +171,7 @@ double meanDiff(vector<string> numbers) {
 		}
 	}
 	if (nums.size() > 1) {
-		for (vector<int>::iterator it = nums.begin();
+		for (vector<double>::iterator it = nums.begin();
 			(it + 1) != nums.end();
 			it++) {
 			sum += (*(it + 1) - *it);
