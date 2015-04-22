@@ -19,8 +19,7 @@ int main(int argc, const char * argv[]) {
 		return(0);
 	} 
 	int NROWS, NCOLS;
-	int dim[2]; // nrow by ncol
-	int numFunctions = 1;
+	int dim[2]; // nrow, ncol
 	string temp;
 	string linetemp;
 	vector<string> varsPerLineTemp;
@@ -38,34 +37,39 @@ int main(int argc, const char * argv[]) {
 		NROWS = atoi(argv[3]);
 		NCOLS = atoi(argv[4]);
 	}
+	cout << "NROWS: " << NROWS << endl;
+	cout << "NCOLS: " << NCOLS << endl;
 	datafile.open(argv[1]);
 	rainSummary.open (argv[2]);
 	if (datafile.good()) {
-		for (int nrow = 0; nrow < NROWS; nrow++) {
+		getline(datafile, linetemp); // get rid of header
+		for (int nrow = 1; nrow < NROWS; nrow++) {
 			stringstream iss;
 			getline(datafile, linetemp);
 			iss << linetemp;
 			for (int ncol = 0; ncol < NCOLS; ncol++) {
 				getline(iss, temp, ',');
-				if (nrow != 0) {
-					varsPerLineTemp.push_back(temp);
-				}
+				varsPerLineTemp.push_back(temp);
 			}
+			/* these for loops could be combined, but i'm doing it 
+			this way in case i want to only do calculations on
+			certain variables */
 			for (vector<string>::iterator it = varsPerLineTemp.begin();
 				 it != varsPerLineTemp.end(); it++) {
 				calculate(*it, statsTemp);
-				for (vector<double>::iterator it2 = statsTemp.begin();
-	 				 it2 != statsTemp.end();
-					 it2++) {
-					rainSummary << *it2 << ",";
-				}
-				statsTemp.clear();
 			}
-			rainSummary << endl;
+			for (vector<double>::iterator it2 = statsTemp.begin();
+ 				 (it2+1) != statsTemp.end();
+				 it2++) {
+				rainSummary << *it2 << ",";	
+			}
+			rainSummary << statsTemp.back() << endl;
+			statsTemp.clear();
+			varsPerLineTemp.clear();
 		}
 	}
-	datafile.close(); // close input file
-	rainSummary.close(); // close output file
+	datafile.close();
+	rainSummary.close();
 }
 
 void getDimension(string fn, int dimArr[2]) {
@@ -86,7 +90,7 @@ void getDimension(string fn, int dimArr[2]) {
 		}
 	}
 	dimArr[0] = nrow-1;
-	dimArr[1] = ncol;
+	dimArr[1] = ncol+1;
 }
 
 void calculate(string numbers, vector<double>& storage) {
@@ -146,9 +150,6 @@ double range(vector<string> numbers) {
 }
 
 double meanDiff(vector<string> numbers) {
-	// eventually you should change this so
-	// it calculates the slope (with the time left til hour as
-	// the x value)
 	vector<int> nums;
 	double sum = 0.0;
 	int n = 0;
