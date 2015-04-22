@@ -12,6 +12,7 @@ void calculate(string, vector<double>&);
 double mean(vector<string>);
 double range(vector<string>);
 double meanDiff(vector<string>);
+int hydroMeteorMode(vector <string>);
 
 int main(int argc, const char * argv[]) {
 	if (argc < 3) {
@@ -54,9 +55,12 @@ int main(int argc, const char * argv[]) {
 			/* these for loops could be combined, but i'm doing it 
 			this way in case i want to only do calculations on
 			certain variables */
+			int colCount = 1;
 			for (vector<string>::iterator it = varsPerLineTemp.begin();
-				 it != varsPerLineTemp.end(); it++) {
-				calculate(*it, statsTemp);
+				 it != varsPerLineTemp.end(); it++, colCount++) {
+				if (colCount == 6) { // hydrometeor type
+					calculate(*it, statsTemp);
+				}
 			}
 			for (vector<double>::iterator it2 = statsTemp.begin();
  				 (it2+1) != statsTemp.end();
@@ -104,7 +108,8 @@ void calculate(string numbers, vector<double>& storage) {
 
 	// storage.push_back(mean(tokens));
 	// storage.push_back(range(tokens));
-	storage.push_back(meanDiff(tokens));
+	//storage.push_back(meanDiff(tokens));
+	storage.push_back(hydroMeteorMode(tokens));
 }
 
 double mean(vector<string> numbers) {
@@ -150,7 +155,7 @@ double range(vector<string> numbers) {
 }
 
 double meanDiff(vector<string> numbers) {
-	vector<int> nums;
+	vector<int> nums; // ints??
 	double sum = 0.0;
 	int n = 0;
 	double mean;
@@ -177,3 +182,41 @@ double meanDiff(vector<string> numbers) {
 	}
 	return(mean);
 }
+
+int hydroMeteorMode(vector <string> numbers) {
+	vector<int> nums;
+	int n = 0;
+	int mode;
+	int hydrometeorArray[15];
+	for (int i = 0; i < 15; i++) {
+		hydrometeorArray[i] = 0;
+	}
+	for (vector<string>::iterator it = numbers.begin();
+		 it != numbers.end();
+		 it++) {
+		if (!(*it == "-99900.0" || *it == "-99901.0" || 
+			  *it == "-99902.0" || *it == "-99903.0" || 
+			  *it == "nan" || *it == "999.0" || 
+			  *it == "" || *it == " " || *it == "\n")) {
+			nums.push_back(stod(*it));
+		}
+	}
+	if (nums.size() > 0) {
+		for (vector<int>::iterator it = nums.begin();
+			(it + 1) != nums.end();
+			it++) {
+			hydrometeorArray[*it]++;
+		}
+		mode = 0;
+		for (int i = 0; i < 15; i++) {
+			if (hydrometeorArray[i] > hydrometeorArray[mode]) {
+				mode = i;
+			}
+		}
+	} else {
+		mode = -99999;
+	}
+	return(mode);
+}
+
+
