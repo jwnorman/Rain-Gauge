@@ -5,17 +5,21 @@ directory <- "C://Kaggle - other//Rain//Rain-Gauge//Data//" # PC
 # Load data
 load(file=paste(directory, "tr.Rda", sep=''))
 load(file=paste(directory, "te.Rda", sep=''))
+load(file=paste(directory, "largetr.Rda", sep=''))
+load(file=paste(directory, "largete.Rda", sep=''))
 
 # Deal with NAs
-tr <- apply(tr, MARGIN=2, function(column) {
-	ifelse(column==-99900, NA, column)
+largetr <- apply(largetr, MARGIN=2, function(column) {
+	ifelse(column==-99999, NA, column)
 })
-te <- apply(te, MARGIN=2, function(column) {
-	ifelse(column==-99900, NA, column)
+largete <- apply(largete, MARGIN=2, function(column) {
+	ifelse(column==-99999, NA, column)
 })
-tr <- as.data.frame(tr)
-te <- as.data.frame(te)
+largetr <- as.data.frame(largetr)
+largete <- as.data.frame(largete)
 
 # Save data
 save(tr, file=paste(directory, "tr.Rda", sep=''))
 save(te, file=paste(directory, "tr.Rda", sep=''))
+save(largetr, file=paste(directory, "largetr.Rda", sep=''))
+save(largete, file=paste(directory, "largete.Rda", sep=''))
