@@ -12,11 +12,12 @@ Todo
 - Create new variable noting the number of hours for each Id using TimeToEnd. If TimeToEnd for a partic Id is 59 20 58 40 30, then numHours is 2
 - ~~Create new variable to note the first measurement of each Id~~
 - Create new variable to note not just the first measurement of each Id, but the nth measurement. So if Id 1 has 10 measurements, then this new variable would be 1:10.
-- Create function to create pdf and or cdf from 0 to 69 mm
+- ~~Create function to create pdf and or cdf from 0 to 69 mm~~
 - ~~Create function to "grade" a set of guesses (CRPS)~~
 - ~~Create the ability to condense tr.Unlisted to tr (so each Id has only one row)~~
 - ~~Create new dataset that's collapsed like tr and te where there is one measurement per Id but instead of RR1, HydrometeorType, and Zdr, I have RR1.mean, RR1.median, RR1.sd, HydrometeorType.mode (since its categorical), Zdr.mean, Zdr.median, and Zdr.sd. And so on.~~
 - ~~Write a C++ program to read in the data, and calculate features per Id; too slow in R.~~
-- Implement more functions in C++ program; especially mode() for the variable HydrometeorTypes since that is a factor, not numerical.
-- When modeling the 69th mm as binomial, instead of mm > 68.5 and < 69.5, it should be strictly greater than 68.5
-- Extract variables in R that are relevant, i.e. Extract.range doesn't make sense
+- ~~Implement more functions in C++ program; especially mode() for the variable HydrometeorTypes since that is a factor, not numerical.~~
+- ~~When modeling the 69th mm as binomial, instead of mm > 68.5 and < 69.5, it should be strictly greater than 68.5.~~
+- ~~Extract variables in R that are relevant, i.e. Extract.range doesn't make sense~~
+- Someone in forum said to say everything after 10 mm is always 0; seems wrong, but maybe try it? 
