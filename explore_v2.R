@@ -37,6 +37,31 @@ round((NApercent.tr + NApercent.te)/2, 5)
 # after running 70 logistic regressions, you'll have 70 estimates for each observation
 # for each observation, cumsum() the estimations and scale to equal 1
 
+# try using prsm() (similar to step(), but options for parallel, cross-validation, and a parsimony factor)
+cls <- makeCluster(rep('localhost', 4))
+
+tr.sz <- 2000
+tr.rows <- sample(1:nrow(train), tr.sz)
+tr.id <- tr$Id.mean[tr.rows]
+Expected <- tr$Expected.mean[tr.rows]
+te.sz <- 100
+te.rows <- sample(1:nrow(test), te.sz)
+te.id <- te$Id.mean[te.rows]
+removeVariables <- c("hydroMode")
+keepVariables <- setdiff(names(train), removeVariables)
+tr.prsm <- train[tr.rows, keepVariables]
+te.prsm <- test[te.rows, keepVariables]
+#tr.prsm <- train[tr.rows, c("RR1.mean", "RhoHV.mean", "Zdr.mean", "hydroMode", "RR1.diffMean")]
+#te.prsm <- test[te.rows, c("RR1.mean", "RhoHV.mean", "Zdr.mean", "hydroMode", "RR1.diffMean")]
+mm <- 0
+# tempExpected <- ifelse(Expected >= (mm - .5) & Expected <= (mm + .5), 1, 0)
+# tempFit <- glm(tempExpected ~ ., family = "binomial", data = tr.prsm)
+# tempStepFit <- step(tempFit, direction="backward")
+tempPrsmFit <- prsm(tempExpected, tr.prsm, k = 0.005, predacc = aiclogit, printdel=TRUE, cls=cls, cv=TRUE)
+vars2ModelWith <- names(tr.prsm)[tempPrsmFit]
+tempFit <- glm(tempExpected ~ as.matrix(tr.prsm[,vars2ModelWith]), family = "binomial")
+compareoutput <- predict(tempFit, tr.prsm, type="response")
+
 # treat > 69.5 as 69s
 Expected2 <- ifelse(Expected >= 69, 69, Expected)
 
