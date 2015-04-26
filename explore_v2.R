@@ -94,18 +94,16 @@ tot <- end - beg # 1.2 minutes for 4
 # 70/4 * tot # 21.4 estimated minutes, but 1.38 hours because of factor, i forgot
 
 allCumsums <- t(apply(probsByMM, MARGIN=1, cumsum))
-cdfs <- t(apply(allCumsums, MARGIN=1, function(obs) obs/obs[length(obs)]))
-cdfs <- as.data.frame(cdfs)
-# cdfs$Id <- idTest
+cdfs <- as.data.frame(t(apply(allCumsums, MARGIN=1, function(obs) obs/obs[length(obs)])))
 cdfs$Id <- as.integer(te$Id.mean)
 cdfs <- cdfs[,c(71,1:70)]
 names(cdfs) <- c("Id", paste("Predicted", 0:69, sep=''))
 
 str(cdfs)
 
-save(probsByMM, file=paste(directory, "probsByMM_20150422.Rda", sep=''))
-save(cdfs, file=paste(directory, "cdfs_20150422.Rda", sep=''))
+save(probsByMM, file=paste(directory, "probsByMM_20150426.Rda", sep=''))
+save(cdfs, file=paste(directory, "cdfs_20150426.Rda", sep=''))
 
-write.csv(cdfs, file=paste(directory, "cdfs_20150422.csv", sep=''), row.names=FALSE)
+write.csv(cdfs, file=paste(directory, "cdfs_20150426.csv", sep=''), row.names=FALSE)
 
 
