@@ -11,7 +11,7 @@ Todo
 - ~~Explore: each day, explore a different variable; start off with TimeToEnd, then DistanceToRadar, and so on. Keep notes and observations on Notes.md~~
 - Create new variable noting the number of hours for each Id using TimeToEnd. If TimeToEnd for a partic Id is 59 20 58 40 30, then numHours is 2
 - ~~Create new variable to note the first measurement of each Id~~
-- Create new variable to note not just the first measurement of each Id, but the nth measurement. So if Id 1 has 10 measurements, then this new variable would be 1:10.
+- ~~Create new variable to note not just the first measurement of each Id, but the nth measurement. So if Id 1 has 10 measurements, then this new variable would be 1:10.~~
 - ~~Create function to create pdf and or cdf from 0 to 69 mm~~
 - ~~Create function to "grade" a set of guesses (CRPS)~~
 - ~~Create the ability to condense tr.Unlisted to tr (so each Id has only one row)~~
@@ -20,4 +20,7 @@ Todo
 - ~~Implement more functions in C++ program; especially mode() for the variable HydrometeorTypes since that is a factor, not numerical.~~
 - ~~When modeling the 69th mm as binomial, instead of mm > 68.5 and < 69.5, it should be strictly greater than 68.5.~~
 - ~~Extract variables in R that are relevant, i.e. Extract.range doesn't make sense~~
-- Someone in forum said to say everything after 10 mm is always 0; seems wrong, but maybe try it? 
+- Someone in forum said to say everything after 10 mm is always 0; seems wrong, but maybe try it?
+- Either remove ar2 from Parsimony.R or fix the cross validating option. Currently it returns the error rate returned from cv.glm() which needs to be minimized while the function ar2 is R^2, which is to be maximized.
+- Go through the predictive variables of train() (*.mean, *.range, *.diffMean, hydroMode) and one by one see which is predictive of Expected (using cv.glm on the training dataset) and maybe do so only 1 through 10 and mark the rest as 1.
+- Use these variables, as long as there isn't a lot of multicolinearity, on the testing dataset
