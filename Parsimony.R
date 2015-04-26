@@ -95,7 +95,7 @@ ar2 <- function(y, x, cv, cvk) {
 		return(adjr)
 	} else if (cv) {
 		cvfit <- cv.glm(as.data.frame(cbind(x,y)), fit, K = cvk)
-		return(cvfit$delta[2]) # warning: ar2, the higher the better, delta, the lower the better..
+		return(1-cvfit$delta[2]) # 1 minus because I want to maximize
 	}
 }
 
