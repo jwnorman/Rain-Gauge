@@ -99,7 +99,21 @@ cdfs$Id <- as.integer(te$Id.mean)
 cdfs <- cdfs[,c(71,1:70)]
 names(cdfs) <- c("Id", paste("Predicted", 0:69, sep=''))
 
-str(cdfs)
+logit70 <- function(trtemp, tetemp, mmmax=69) {
+	probsByMM <- sapply(0:mmmax, function(mm) {
+		tempExpected <- ifelse(trtemp$Expected >= (mm - .5) & trtemp$Expected <= (mm + .5), 1, 0)
+		tempFit <- glm(tempExpected ~ . - Id, family = "binomial", data = trtemp)
+		predict(tempFit, tetemp, type="response")
+	})
+	probsByMM <- cbind(probsByMM, matrix(0, nrow = nrow(tetemp), ncol = 70 - ncol(probsByMM)))
+	allCumsums <- t(apply(probsByMM, MARGIN=1, cumsum))
+	cdfs <- as.data.frame(t(apply(allCumsums, MARGIN=1, function(obs) obs/obs[length(obs)])))
+	
+	cdfs$Id <- as.integer(tetemp$Id)
+	cdfs <- cdfs[,c(ncol(cdfs), 1:(ncol(cdfs)-1))]
+	names(cdfs) <- c("Id", paste("Predicted", 0:69, sep=''))
+	return(cdfs)
+}
 
 save(probsByMM, file=paste(directory, "probsByMM_20150426.Rda", sep=''))
 save(cdfs, file=paste(directory, "cdfs_20150426.Rda", sep=''))
