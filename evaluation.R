@@ -65,17 +65,53 @@ getCRPS <- function(model = logit70, data = data, dataSize = nrow(size), cvk = 1
 	})
 	end <- Sys.time()
 	tot <- end - begin
-	list(time = tot, crps = crpslist, crpsavg = mean(crpslist))
+	list(varnames = names(data), time = tot, crps = crpslist, crpsavg = mean(crpslist))
 }
 
 keepVariables <- c("RR1.mean", "RR1.range", "Reflectivity.mean", "Reflectivity.range", "RhoHV.mean", "RhoHV.range")
+keepVariables <- c("RR1.range", "RR1.range")
 data <- train[ , keepVariables]
 data$Expected <- tr$Expected.mean
 data$Id <- tr$Id.mean
-getCRPS(data = data, dataSize = 100, mmmax = 5, cls = TRUE)
+data <- data[,-1]
+getCRPS(data = data, dataSize = 50000, mmmax = 12, cls = TRUE)
 
 # 5.223747 minutes, serial, 6 variables, cvk = 10, mmmax = 69, size of all data used = 10000
 # 2.456471 minutes, parall, 6 variables, cvk = 10, mmmax = 69, size of all data used = 10000
 # 0.597540 minutes, parall, 6 variables, cvk = 10, mmmax = 10, size of all data used = 10000
 # 0.061651 minutes, parall, 6 variables, cvk = 10, mmmax = 5 , size of all data used = 100
+# 2.878385 minutes, parall, 6 variables, cvk = 10, mmmax = 12, size of all data used = 50000, .007379382
+# 33.47914 minutes, parall, 6 variables, cvk = 10, mmmax = 12, size of all data used = 500000, .007568024
+# 2.410278 minutes, parall, RR1.mean   , cvk = 10, mmmax = 12, size of all data used = 50000, .0079908
 
+holder <- list()
+listofvarnames <- names(train)[-length(names(train))]
+counter = 1
+for (varname in listofvarnames) {
+	keepVariables <- c("hydroMode", varname)
+	data <- train[ , keepVariables]
+	data$Expected <- tr$Expected.mean
+	data$Id <- tr$Id.mean
+	data <- data[,-1]
+	holder[[counter]] <- getCRPS(data = data, dataSize = 50000, mmmax = 12, cls = TRUE)
+	counter = counter + 1
+}
+
+save(holder, file = paste(directory, "holder1.Rda", sep=''))
+
+holder2 <- list()
+removeVars <- c("Reflectivity.range", "hydroMode")
+keepVars <- setdiff(names(train), removeVars)
+listofvarnames <- keepVars
+counter = 1
+for (varname in listofvarnames) {
+	keepVariables <- c("Reflectivity.range", varname)
+	data <- train[ , keepVariables]
+	data$Expected <- tr$Expected.mean
+	data$Id <- tr$Id.mean
+	data <- data[,-1]
+	holder2[[counter]] <- getCRPS(data = data, dataSize = 50000, mmmax = 12, cls = TRUE)
+	counter = counter + 1
+}
+
+save(holder2, file = paste(directory, "holder2.Rda", sep=''))
