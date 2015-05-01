@@ -24,3 +24,4 @@ Todo
 - Either remove ar2 from Parsimony.R or fix the cross validating option. Currently it returns the error rate returned from cv.glm() which needs to be minimized while the function ar2 is R^2, which is to be maximized.
 - Go through the predictive variables of train() (*.mean, *.range, *.diffMean, hydroMode) and one by one see which is predictive of Expected (using cv.glm on the training dataset) and maybe do so only 1 through 10 and mark the rest as 1.
 - Use these variables, as long as there isn't a lot of multicolinearity, on the testing dataset
+- try using knn to look at similar observations, and averaging by weight their Expecteds

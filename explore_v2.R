@@ -108,16 +108,37 @@ logit70 <- function(trtemp, tetemp, mmmax=69) {
 	probsByMM <- cbind(probsByMM, matrix(0, nrow = nrow(tetemp), ncol = 70 - ncol(probsByMM)))
 	allCumsums <- t(apply(probsByMM, MARGIN=1, cumsum))
 	cdfs <- as.data.frame(t(apply(allCumsums, MARGIN=1, function(obs) obs/obs[length(obs)])))
-	
 	cdfs$Id <- as.integer(tetemp$Id)
 	cdfs <- cdfs[,c(ncol(cdfs), 1:(ncol(cdfs)-1))]
 	names(cdfs) <- c("Id", paste("Predicted", 0:69, sep=''))
 	return(cdfs)
 }
 
-save(probsByMM, file=paste(directory, "probsByMM_20150426.Rda", sep=''))
-save(cdfs, file=paste(directory, "cdfs_20150426.Rda", sep=''))
+# model with just Reflectivity.range
+trtemp <- train
+trtemp$Id <- idTrain
+trtemp$Expected <- Expected
+trtemp <- trtemp[c("Id", "Reflectivity.range", "Expected")]
+tetemp <- test
+tetemp$Id <- idTest
+tetemp <- tetemp[, c("Id", "Reflectivity.range")]
 
-write.csv(cdfs, file=paste(directory, "cdfs_20150426.csv", sep=''), row.names=FALSE)
+beg <- Sys.time()
+probsByMM <- sapply(0:20, function(mm) {
+	tempExpected <- ifelse(trtemp$Expected >= (mm - .5) & trtemp$Expected <= (mm + .5), 1, 0)
+	tempFit <- glm(tempExpected ~ Reflectivity.range, family = "binomial", data = trtemp)
+	predict(tempFit, tetemp, type="response")
+})
+probsByMM <- cbind(probsByMM, matrix(0, nrow = nrow(tetemp), ncol = 70 - ncol(probsByMM)))
+allCumsums <- t(apply(probsByMM, MARGIN=1, cumsum))
+cdfs <- as.data.frame(t(apply(allCumsums, MARGIN=1, function(obs) obs/obs[length(obs)])))
+cdfs$Id <- as.integer(tetemp$Id)
+cdfs <- cdfs[,c(ncol(cdfs), 1:(ncol(cdfs)-1))]
+names(cdfs) <- c("Id", paste("Predicted", 0:69, sep=''))
+end <- Sys.time()
+tot <- end - beg
+
+save(cdfs, file=paste(directory, "cdfs_20150430.Rda", sep=''))
+write.csv(cdfs, file=paste(directory, "cdfs_20150430.csv", sep=''), row.names=FALSE)
 
 

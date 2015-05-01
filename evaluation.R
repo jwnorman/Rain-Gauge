@@ -37,7 +37,7 @@ CRPS <- function(cdfmat, actual, cls = FALSE) {
 logit70 <- function(trtemp, tetemp, mmmax=69) {
 	probsByMM <- sapply(0:mmmax, function(mm) {
 		tempExpected <- ifelse(trtemp$Expected >= (mm - .5) & trtemp$Expected <= (mm + .5), 1, 0)
-		tempFit <- glm(tempExpected ~ . - Id, family = "binomial", data = trtemp)
+		tempFit <- glm(tempExpected ~ . - Id - Expected, family = "binomial", data = trtemp)
 		predict(tempFit, tetemp, type="response")
 	})
 	probsByMM <- cbind(probsByMM, matrix(0, nrow = nrow(tetemp), ncol = 70 - ncol(probsByMM)))
@@ -100,12 +100,12 @@ for (varname in listofvarnames) {
 save(holder, file = paste(directory, "holder1.Rda", sep=''))
 
 holder2 <- list()
-removeVars <- c("Reflectivity.range", "hydroMode")
+removeVars <- c("Reflectivity.mean", "hydroMode")
 keepVars <- setdiff(names(train), removeVars)
 listofvarnames <- keepVars
 counter = 1
 for (varname in listofvarnames) {
-	keepVariables <- c("Reflectivity.range", varname)
+	keepVariables <- c("Reflectivity.mean", varname)
 	data <- train[ , keepVariables]
 	data$Expected <- tr$Expected.mean
 	data$Id <- tr$Id.mean
@@ -115,3 +115,8 @@ for (varname in listofvarnames) {
 }
 
 save(holder2, file = paste(directory, "holder2.Rda", sep=''))
+
+load(file = paste(directory, "holder1.Rda", sep=''))
+load(file = paste(directory, "holder2.Rda", sep=''))
+sort(unlist(lapply(holder, function(x) x$crpsavg)))
+sort(unlist(lapply(holder2, function(x) x$crpsavg)))
