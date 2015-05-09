@@ -70,13 +70,40 @@ vars2ModelWith <- names(tr.prsm)[tempPrsmFit]
 tempFit <- glm(tempExpected ~ as.matrix(tr.prsm[,vars2ModelWith]), family = "binomial")
 compareoutput <- predict(tempFit, tr.prsm, type="response")
 
+# add squared variables
+removeVariables <- c("hydroMode")
+keepVariables <- setdiff(names(train), removeVariables)
+train = train[,keepVariables]
+trainSquared = list()
+counter = 1
+for (i in keepVariables) {
+	trainSquared[[i]] = train[,i]^2
+	counter = counter + 1
+}
+trainSquared = as.data.frame(trainSquared)
+alltr = as.data.frame(cbind(train, trainSquared))
+
+test = test[,keepVariables]
+testSquared = list()
+counter = 1
+for (i in keepVariables) {
+	testSquared[[i]] = test[,i]^2
+	counter = counter + 1
+}
+testSquared = as.data.frame(testSquared)
+allte = as.data.frame(cbind(test, testSquared))
+
 # after using pca.R
 beg <- Sys.time()
-probsByMM <- as.data.frame(sapply(0:69, function(mm) {
+
+numNodes <- detectCores() - 1
+cls <- makeCluster(numNodes, type="FORK")
+probsByMM <- as.data.frame(parSapply(cls, 0:69, function(mm) {
 	tempExpected <- ifelse(Expected >= (mm - .5) & Expected <= (mm + .5), 1, 0)
 	tempFit <- glm(tempExpected ~ ., family = "binomial", data = pc.tr)
 	predict(tempFit, pc.te, type="response")
 }))
+stopCluster(cls)
 end <- Sys.time()
 tot <- end - beg
 

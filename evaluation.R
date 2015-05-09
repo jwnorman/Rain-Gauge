@@ -109,12 +109,39 @@ for (varname in listofvarnames) {
 	data <- train[ , keepVariables]
 	data$Expected <- tr$Expected.mean
 	data$Id <- tr$Id.mean
-	data <- data[,-1]
 	holder2[[counter]] <- getCRPS(data = data, dataSize = 50000, mmmax = 12, cls = TRUE)
 	counter = counter + 1
 }
 
 save(holder2, file = paste(directory, "holder2.Rda", sep=''))
+
+before = Sys.time()
+holder3 <- list()
+listofvarnames <- names(train)[-length(names(train))]
+counter = 1
+for (varname in listofvarnames) {
+	keepVariables <- c("hydroMode", varname)
+	data <- train[ , keepVariables]
+	data$Expected <- tr$Expected.mean
+	data$Id <- tr$Id.mean
+	data <- data[,-1]
+	holder3[[counter]] <- getCRPS(data = data, dataSize = 50000, mmmax = 12, cls = TRUE)
+	counter = counter + 1
+	
+	## repeat with squared term
+	data <- train[ , keepVariables]
+	data[,2] <- data[,2]^2
+	data$Expected <- tr$Expected.mean
+	data$Id <- tr$Id.mean
+	data <- data[,-1]
+	holder3[[counter]] <- getCRPS(data = data, dataSize = 50000, mmmax = 12, cls = TRUE)
+	counter = counter + 1
+}
+after = Sys.time()
+total = after - before
+total
+
+save(holder3, file = paste(directory, "holder3.Rda", sep=''))
 
 load(file = paste(directory, "holder1.Rda", sep=''))
 load(file = paste(directory, "holder2.Rda", sep=''))
