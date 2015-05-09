@@ -94,10 +94,10 @@ testSquared = as.data.frame(testSquared)
 allte = as.data.frame(cbind(test, testSquared))
 
 # after using pca.R
-beg <- Sys.time()
-
+Expected = tr$Expected.mean
 numNodes <- detectCores() - 1
 cls <- makeCluster(numNodes, type="FORK")
+beg <- Sys.time()
 probsByMM <- as.data.frame(parSapply(cls, 0:69, function(mm) {
 	tempExpected <- ifelse(Expected >= (mm - .5) & Expected <= (mm + .5), 1, 0)
 	tempFit <- glm(tempExpected ~ ., family = "binomial", data = pc.tr)
@@ -106,6 +106,14 @@ probsByMM <- as.data.frame(parSapply(cls, 0:69, function(mm) {
 stopCluster(cls)
 end <- Sys.time()
 tot <- end - beg
+
+allCumsums <- t(apply(probsByMM, MARGIN=1, cumsum))
+cdfs <- as.data.frame(apply(allCumsums, MARGIN=2, function(x) {ifelse(x > 1, 1, x)})) # new method
+cdfs$Id <- as.integer(te$Id.mean)
+cdfs <- cdfs[,c(ncol(cdfs), 1:(ncol(cdfs)-1))]
+names(cdfs) <- c("Id", paste("Predicted", 0:69, sep=''))
+save(cdfs, file=paste(directory, "cdfs_20150509.Rda", sep=''))
+write.csv(cdfs, file=paste(directory, "cdfs_20150509.csv", sep=''), row.names=FALSE)
 
 # treat > 69.5 as 69s
 Expected2 <- ifelse(Expected >= 69, 69, Expected)
@@ -168,4 +176,13 @@ tot <- end - beg
 save(cdfs, file=paste(directory, "cdfs_20150430.Rda", sep=''))
 write.csv(cdfs, file=paste(directory, "cdfs_20150430.csv", sep=''), row.names=FALSE)
 
+# Change the probsByMM -> cdfs process of original model
+load(file=paste(directory, "probsByMM_20150416.Rda", sep=''))
+allCumsums <- t(apply(probsByMM, MARGIN=1, cumsum))
+cdfs <- as.data.frame(apply(allCumsums, MARGIN=2, function(x) {ifelse(x > 1, 1, x)})) # new method
+cdfs$Id <- as.integer(te$Id.mean)
+cdfs <- cdfs[,c(ncol(cdfs), 1:(ncol(cdfs)-1))]
+names(cdfs) <- c("Id", paste("Predicted", 0:69, sep=''))
+save(cdfs, file=paste(directory, "cdfs_20150509_2.Rda", sep=''))
+write.csv(cdfs, file=paste(directory, "cdfs_20150509_2.csv", sep=''), row.names=FALSE)
 
