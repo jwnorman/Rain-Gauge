@@ -173,8 +173,8 @@ names(cdfs) <- c("Id", paste("Predicted", 0:69, sep=''))
 end <- Sys.time()
 tot <- end - beg
 
-save(cdfs, file=paste(directory, "cdfs_20150430.Rda", sep=''))
-write.csv(cdfs, file=paste(directory, "cdfs_20150430.csv", sep=''), row.names=FALSE)
+save(cdfs, file=paste(directory, "cdfs_20150510.Rda", sep=''))
+write.csv(cdfs, file=paste(directory, "cdfs_20150510.csv", sep=''), row.names=FALSE)
 
 # Change the probsByMM -> cdfs process of original model
 load(file=paste(directory, "probsByMM_20150416.Rda", sep=''))
@@ -185,3 +185,24 @@ cdfs <- cdfs[,c(ncol(cdfs), 1:(ncol(cdfs)-1))]
 names(cdfs) <- c("Id", paste("Predicted", 0:69, sep=''))
 save(cdfs, file=paste(directory, "cdfs_20150509_2.Rda", sep=''))
 write.csv(cdfs, file=paste(directory, "cdfs_20150509_2.csv", sep=''), row.names=FALSE)
+
+# original model but without Zdr.range
+beg <- Sys.time()
+trtemp <- train[,1:7]
+tetemp <- test[,1:7]
+probsByMM <- sapply(0:69, function(mm) {
+	tempExpected <- ifelse(tr$Expected.mean >= (mm - .5) & tr$Expected.mean <= (mm + .5), 1, 0)
+	tempFit <- glm(tempExpected ~ ., family = "binomial", data=trtemp)
+	predict(tempFit, tetemp, type="response")
+})
+probsByMM <- cbind(probsByMM, matrix(0, nrow = nrow(tetemp), ncol = 70 - ncol(probsByMM)))
+allCumsums <- t(apply(probsByMM, MARGIN=1, cumsum))
+cdfs <- as.data.frame(t(apply(allCumsums, MARGIN=1, function(obs) obs/obs[length(obs)])))
+cdfs$Id <- as.integer(te$Id.mean)
+cdfs <- cdfs[,c(ncol(cdfs), 1:(ncol(cdfs)-1))]
+names(cdfs) <- c("Id", paste("Predicted", 0:69, sep=''))
+end <- Sys.time()
+tot <- end - beg
+
+save(cdfs, file=paste(directory, "cdfs_20150510.Rda", sep=''))
+write.csv(cdfs, file=paste(directory, "cdfs_20150510.csv", sep=''), row.names=FALSE)

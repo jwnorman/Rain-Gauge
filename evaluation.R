@@ -192,6 +192,60 @@ after = Sys.time()
 total = after - before
 total
 
+save(holder5, file = paste(directory, "holder5.Rda", sep=''))
+
+# Step 3 of backwards stepwise, original model - Zdr.range - Reflectivity.range
+before = Sys.time()
+holder6 <- list()
+removeVars <- c("Zdr.range", "Reflectivity.range")
+includeVars <- setdiff(names(train)[1:8], removeVars)
+counter = 1
+for (varnum in 0:length(includeVars)) {
+	if (varnum == 0) {
+		data <- train[ , includeVars]
+	} else {
+		data <- train[ , includeVars[-varnum]]
+	}
+	data$Expected <- tr$Expected.mean
+	data$Id <- tr$Id.mean
+	holder6[[counter]] <- getCRPS(data = data, dataSize = 50000, mmmax = 20, cls = TRUE)
+	cat("Leaving out: ", all[varnum], " \n")
+	cat("All: ", holder6[[counter]]$crps, "\n")
+	cat("Average: ", holder6[[counter]]$crpsavg, " \n\n")
+	counter = counter + 1
+}
+after = Sys.time()
+total = after - before
+total
+
+save(holder6, file = paste(directory, "holder6.Rda", sep=''))
+
+# Step 3 v2 of backwards stepwise, original model - Zdr.range - RhoHV.mean
+before = Sys.time()
+holder7 <- list()
+removeVars <- c("Zdr.range", "RhoHV.mean")
+includeVars <- setdiff(names(train)[1:8], removeVars)
+counter = 1
+for (varnum in 0:length(includeVars)) {
+	if (varnum == 0) {
+		data <- train[ , includeVars]
+	} else {
+		data <- train[ , includeVars[-varnum]]
+	}
+	data$Expected <- tr$Expected.mean
+	data$Id <- tr$Id.mean
+	holder7[[counter]] <- getCRPS(data = data, dataSize = 50000, mmmax = 20, cls = TRUE)
+	cat("Leaving out: ", all[varnum], " \n")
+	cat("All: ", holder7[[counter]]$crps, "\n")
+	cat("Average: ", holder7[[counter]]$crpsavg, " \n\n")
+	counter = counter + 1
+}
+after = Sys.time()
+total = after - before
+total
+
+save(holder7, file = paste(directory, "holder7.Rda", sep=''))
+
 load(file = paste(directory, "holder1.Rda", sep=''))
 load(file = paste(directory, "holder2.Rda", sep=''))
 sort(unlist(lapply(holder, function(x) x$crpsavg)))
