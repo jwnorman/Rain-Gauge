@@ -143,6 +143,55 @@ total
 
 save(holder3, file = paste(directory, "holder3.Rda", sep=''))
 
+# Start with original model, and use getCrps() + backwards stepwise procedure
+before = Sys.time()
+holder4 <- list()
+all <- names(train)[1:8]
+counter = 1
+for (varnum in 0:length(all)) {
+	if (varnum == 0) {
+		data <- train[ , all]
+	} else {
+		data <- train[ , all[-varnum]]
+	}
+	data$Expected <- tr$Expected.mean
+	data$Id <- tr$Id.mean
+	holder4[[counter]] <- getCRPS(data = data, dataSize = 50000, mmmax = 20, cls = TRUE)
+	cat("Leaving out: ", all[varnum], " \n")
+	cat("All: ", holder4[[counter]]$crps, "\n")
+	cat("Average: ", holder4[[counter]]$crpsavg, " \n\n")
+	counter = counter + 1
+}
+after = Sys.time()
+total = after - before
+total
+
+save(holder4, file = paste(directory, "holder4.Rda", sep=''))
+## Leaving Zdr.mean and Zdr.range yield better results!
+
+# Step 2 of backwards stepwise, original model - Zdr.range
+before = Sys.time()
+holder5 <- list()
+all <- names(train)[1:7] # remove Zdr.range (it just happens to be last)
+counter = 1
+for (varnum in 0:length(all)) {
+	if (varnum == 0) {
+		data <- train[ , all]
+	} else {
+		data <- train[ , all[-varnum]]
+	}
+	data$Expected <- tr$Expected.mean
+	data$Id <- tr$Id.mean
+	holder5[[counter]] <- getCRPS(data = data, dataSize = 50000, mmmax = 20, cls = TRUE)
+	cat("Leaving out: ", all[varnum], " \n")
+	cat("All: ", holder5[[counter]]$crps, "\n")
+	cat("Average: ", holder5[[counter]]$crpsavg, " \n\n")
+	counter = counter + 1
+}
+after = Sys.time()
+total = after - before
+total
+
 load(file = paste(directory, "holder1.Rda", sep=''))
 load(file = paste(directory, "holder2.Rda", sep=''))
 sort(unlist(lapply(holder, function(x) x$crpsavg)))

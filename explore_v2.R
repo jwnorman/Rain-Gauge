@@ -185,4 +185,3 @@ cdfs <- cdfs[,c(ncol(cdfs), 1:(ncol(cdfs)-1))]
 names(cdfs) <- c("Id", paste("Predicted", 0:69, sep=''))
 save(cdfs, file=paste(directory, "cdfs_20150509_2.Rda", sep=''))
 write.csv(cdfs, file=paste(directory, "cdfs_20150509_2.csv", sep=''), row.names=FALSE)
-
