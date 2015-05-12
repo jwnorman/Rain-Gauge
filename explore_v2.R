@@ -204,5 +204,25 @@ names(cdfs) <- c("Id", paste("Predicted", 0:69, sep=''))
 end <- Sys.time()
 tot <- end - beg
 
-save(cdfs, file=paste(directory, "cdfs_20150510.Rda", sep=''))
-write.csv(cdfs, file=paste(directory, "cdfs_20150510.csv", sep=''), row.names=FALSE)
+# original model but without Zdr.range and RhoHV.range
+beg <- Sys.time()
+removeVars <- c("Zdr.range", "RhoHV.range")
+includeVars <- setdiff(names(train)[1:8], removeVars)
+trtemp <- train[,includeVars]
+tetemp <- test[,includeVars]
+cls <- makeCluster(7, type="FORK")
+probsByMM <- parSapply(cls, 0:69, function(mm) {
+	tempExpected <- ifelse(tr$Expected.mean >= (mm - .5) & tr$Expected.mean <= (mm + .5), 1, 0)
+	tempFit <- glm(tempExpected ~ ., family = "binomial", data=trtemp)
+	predict(tempFit, tetemp, type="response")
+})
+allCumsums <- t(apply(probsByMM, MARGIN=1, cumsum))
+cdfs <- as.data.frame(t(apply(allCumsums, MARGIN=1, function(obs) obs/obs[length(obs)])))
+cdfs$Id <- as.integer(te$Id.mean)
+cdfs <- cdfs[,c(ncol(cdfs), 1:(ncol(cdfs)-1))]
+names(cdfs) <- c("Id", paste("Predicted", 0:69, sep=''))
+end <- Sys.time()
+tot <- end - beg
+
+save(cdfs, file=paste(directory, "cdfs_20150511.Rda", sep=''))
+write.csv(cdfs, file=paste(directory, "cdfs_20150511.csv", sep=''), row.names=FALSE)

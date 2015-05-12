@@ -49,7 +49,7 @@ logit70 <- function(trtemp, tetemp, mmmax=69) {
 	return(cdfs)
 }
 
-getCRPS <- function(model = logit70, data = data, dataSize = nrow(size), cvk = 10, mmmax = 69, cls = FALSE) {
+getCRPS <- function(model = logit70, data = data, dataSize = nrow(data), cvk = 10, mmmax = 69, cls = FALSE) {
 	data <- data[sample(x = nrow(data), size = dataSize, replace = FALSE), ]
 	nobs <- floor(nrow(data) / cvk)
 	dfsplitup <- lapply(1:cvk, function(block) {
@@ -156,7 +156,7 @@ for (varnum in 0:length(all)) {
 	}
 	data$Expected <- tr$Expected.mean
 	data$Id <- tr$Id.mean
-	holder4[[counter]] <- getCRPS(data = data, dataSize = 50000, mmmax = 20, cls = TRUE)
+	holder4[[counter]] <- getCRPS(data = data, dataSize = 50000, mmmax = 69, cls = TRUE)
 	cat("Leaving out: ", all[varnum], " \n")
 	cat("All: ", holder4[[counter]]$crps, "\n")
 	cat("Average: ", holder4[[counter]]$crpsavg, " \n\n")
@@ -182,7 +182,7 @@ for (varnum in 0:length(all)) {
 	}
 	data$Expected <- tr$Expected.mean
 	data$Id <- tr$Id.mean
-	holder5[[counter]] <- getCRPS(data = data, dataSize = 50000, mmmax = 20, cls = TRUE)
+	holder5[[counter]] <- getCRPS(data = data, dataSize = 1126694, mmmax = 69, cls = TRUE)
 	cat("Leaving out: ", all[varnum], " \n")
 	cat("All: ", holder5[[counter]]$crps, "\n")
 	cat("Average: ", holder5[[counter]]$crpsavg, " \n\n")
@@ -208,7 +208,7 @@ for (varnum in 0:length(includeVars)) {
 	}
 	data$Expected <- tr$Expected.mean
 	data$Id <- tr$Id.mean
-	holder6[[counter]] <- getCRPS(data = data, dataSize = 50000, mmmax = 20, cls = TRUE)
+	holder6[[counter]] <- getCRPS(data = data, dataSize = 50000, mmmax = 69, cls = TRUE)
 	cat("Leaving out: ", all[varnum], " \n")
 	cat("All: ", holder6[[counter]]$crps, "\n")
 	cat("Average: ", holder6[[counter]]$crpsavg, " \n\n")
